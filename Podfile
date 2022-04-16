@@ -11,5 +11,6 @@ target 'VK_GB_ClientServer' do
   pod 'SwiftyJSON'
   pod 'Kingfisher'
   pod 'DynamicJSON'
+  pod 'PromiseKit'
 
 end

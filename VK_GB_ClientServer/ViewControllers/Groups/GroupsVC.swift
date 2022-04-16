@@ -16,6 +16,14 @@ final class GroupsVC: UITableViewController {
     private var groupsFiltered = [GroupRealm]()
     private let networkService = NetworkService<Group>()
     private var userGroups: Results<GroupRealm>? = try? RealmService.load(typeOf: GroupRealm.self)
+    private let groupsPromise = GroupsPromiseKit.instance
+        private var groups = [GroupRealm]() {
+            didSet {
+                DispatchQueue.main.async {
+                    self.sortGroups()
+                }
+            }
+        }
     
     override func viewDidLoad() {
         
@@ -29,6 +37,16 @@ final class GroupsVC: UITableViewController {
             forCellReuseIdentifier: "groupCell")
         
         networkServiceFunction()
+        
+        groupsPromise.fetchGroups()
+            .then(on: .global(), groupsPromise.decodeGroups(data:))
+            .then(groupsPromise.groupsRealmService(groups:))
+            .done(on: .main) { result in
+                self.groups = result
+            }
+            .catch { error in
+                print(error)
+            }
         sortGroups()
     }
     
