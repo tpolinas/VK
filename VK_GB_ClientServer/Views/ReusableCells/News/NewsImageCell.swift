@@ -13,13 +13,10 @@ class NewsImageCell: UICollectionViewCell,
 
     @IBOutlet var newsImage: UIImageView!
     
-    func configure(url: String) {
+    func configure(image: UIImage?) {
         self.newsImage.isHidden = true
         self.newsImage.image = nil
-        self.newsImage.kf.setImage(
-            with: URL(string: url),
-            placeholder: UIImage(named: "default"),
-            options: [.transition(.fade(0.2))])
+        self.newsImage?.image = image
         self.newsImage.contentMode = .scaleAspectFit
         self.newsImage.isHidden = false
     }

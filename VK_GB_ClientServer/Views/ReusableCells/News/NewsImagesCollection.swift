@@ -14,6 +14,7 @@ class NewsImagesCollection: UITableViewCell,
     var currentNews: News? = nil
     var photoURLs: [String] = []
     var numberOfItems = CGFloat()
+    private var imageCacheService: PhotoCacheService?
     
     @IBOutlet var collectionView: UICollectionView!
     @IBOutlet var aspect11: NSLayoutConstraint!
@@ -28,6 +29,9 @@ class NewsImagesCollection: UITableViewCell,
         
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+        imageCacheService = PhotoCacheService(container: collectionView)
+        
         numberOfItems = CGFloat(photoURLs.count)
         configureLayout()
      
@@ -51,8 +55,8 @@ class NewsImagesCollection: UITableViewCell,
             for: indexPath) as? NewsImageCell
         else { return UICollectionViewCell() }
 
-        cell.configure(url: photoURLs[indexPath.row])
-        
+        let image = imageCacheService?.photo(atIndexPath: indexPath, byUrl: photoURLs[indexPath.row])
+        cell.configure(image: image)
         
         return cell
     }

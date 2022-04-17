@@ -29,6 +29,8 @@ final class GroupsVC: UITableViewController {
         
         super.viewDidLoad()
         
+        try? RealmService.clear()
+        
         groupsSearch.delegate = self
         
         tableView.register(UINib(
