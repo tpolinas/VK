@@ -20,9 +20,11 @@ class ProfileHeader: UICollectionReusableView {
     func configure(
         friendName: String,
         url: String,
-        friendGender: String) {
+        friendGender: String
+    ) {
             self.friendName.text = friendName
-            self.friendAvatar.kf.setImage(with: URL(string: url))
+            self.friendAvatar.kf.setImage(
+                with: URL(string: url))
             self.friendGender.text = "Gender: \(friendGender)"
     }
 }

@@ -39,13 +39,17 @@ class AvatarImage: UIImageView {
        
        let animationGroup = CAAnimationGroup()
        animationGroup.animations = [animation, animation1]
-       object.layer.add(animationGroup, forKey: nil)
+       object.layer.add(
+        animationGroup,
+        forKey: nil)
     }
 }
 
 class AvatarBackShadow: UIView {
     @IBInspectable var shadowColor: UIColor = .lightGray
-    @IBInspectable var shadowOffset: CGSize = CGSize(width: 2, height: 2)
+    @IBInspectable var shadowOffset: CGSize = CGSize(
+                                                width: 2,
+                                                height: 2)
     @IBInspectable var shadowOpacity: Float = 1
     @IBInspectable var shadowRadius: CGFloat = 5
     

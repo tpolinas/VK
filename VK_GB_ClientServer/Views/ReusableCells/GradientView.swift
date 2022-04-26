@@ -55,11 +55,17 @@ class GradientView: UIView {
    }
 
    func updateLocations() {
-       self.gradientLayer.locations = [self.startLocation as NSNumber, self.endLocation as NSNumber]
+       self.gradientLayer.locations = [
+        self.startLocation as NSNumber,
+        self.endLocation as NSNumber
+       ]
    }
    
    func updateColors() {
-       self.gradientLayer.colors = [self.startColor.cgColor, self.endColor.cgColor]
+       self.gradientLayer.colors = [
+        self.startColor.cgColor,
+        self.endColor.cgColor
+       ]
    }
 
    func updateStartPoint() {

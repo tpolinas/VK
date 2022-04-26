@@ -15,7 +15,10 @@ class GroupCell: UITableViewCell {
         AvatarImage.animateAvatar(groupAvatar)
     }
     
-    func configure(name: String, url: String) {
+    func configure(
+        name: String,
+        url: String
+    ) {
         self.groupAvatar.isHidden = true
         self.groupAvatar.image = nil
         self.groupAvatar.kf.setImage(

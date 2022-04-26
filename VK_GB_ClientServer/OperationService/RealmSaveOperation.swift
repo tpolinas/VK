@@ -16,7 +16,8 @@ final class RealmSaveOperation: AsyncOperation {
     
     override func main() {
         guard
-            let fetchDataOperation = dependencies.first(where: { $0 is NetworkServiceOperation }) as? NetworkServiceOperation,
+            let fetchDataOperation = dependencies.first(
+                where: { $0 is NetworkServiceOperation }) as? NetworkServiceOperation,
             let data = fetchDataOperation.data
         else {
             print("data is not loaded")

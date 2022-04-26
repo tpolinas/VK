@@ -7,9 +7,7 @@
 
 import UIKit
 
-class NewsImagesCollection: UITableViewCell,
-                            UICollectionViewDelegate,
-                            UICollectionViewDataSource {
+class NewsImagesCollection: UITableViewCell {
     
     var currentNews: News? = nil
     var photoURLs: [String] = []
@@ -22,9 +20,10 @@ class NewsImagesCollection: UITableViewCell,
     @IBOutlet var aspect31: NSLayoutConstraint!
     @IBOutlet var aspect32: NSLayoutConstraint!
     
-    override func setSelected(_ selected: Bool,
-                              animated: Bool) {
-        
+    override func setSelected(
+        _ selected: Bool,
+        animated: Bool
+    ) {
         super.setSelected(selected, animated: animated)
         
         collectionView.delegate = self
@@ -39,23 +38,29 @@ class NewsImagesCollection: UITableViewCell,
                UINib(
                    nibName: "NewsImageCell",
                    bundle: nil),
-               forCellWithReuseIdentifier: "newsImageSingle")
+               forCellWithReuseIdentifier: "NewsImageCell")
     }
     
-    func collectionView(_ collectionView: UICollectionView,
-                        numberOfItemsInSection section: Int) -> Int {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
         photoURLs.count
     }
     
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "newsImageSingle",
+            withReuseIdentifier: "NewsImageCell",
             for: indexPath) as? NewsImageCell
         else { return UICollectionViewCell() }
 
-        let image = imageCacheService?.photo(atIndexPath: indexPath, byUrl: photoURLs[indexPath.row])
+        let image = imageCacheService?.photo(
+            atIndexPath: indexPath,
+            byUrl: photoURLs[indexPath.row])
         cell.configure(image: image)
         
         return cell
@@ -73,29 +78,45 @@ class NewsImagesCollection: UITableViewCell,
         aspect32.isActive = false
         
 
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        layout.sectionInset = UIEdgeInsets(
+                                top: 0,
+                                left: 0,
+                                bottom: 0,
+                                right: 0)
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
         
         switch numberOfItems {
         case 1:
             aspect11.isActive = true
-            layout.itemSize = CGSize(width: width, height: width)
+            layout.itemSize = CGSize(
+                                width: width,
+                                height: width)
         case 2:
             aspect21.isActive = true
-            layout.itemSize = CGSize(width: width / numberOfItems, height: width / numberOfItems)
+            layout.itemSize = CGSize(
+                                width: width / numberOfItems,
+                                height: width / numberOfItems)
         case 3:
             aspect31.isActive = true
-            layout.itemSize = CGSize(width: width / numberOfItems, height: width / numberOfItems)
+            layout.itemSize = CGSize(
+                                width: width / numberOfItems,
+                                height: width / numberOfItems)
         case 4:
             aspect11.isActive = true
-            layout.itemSize = CGSize(width: width / 2, height: width / 2)
+            layout.itemSize = CGSize(
+                                width: width / 2,
+                                height: width / 2)
         case 5, 6:
             aspect32.isActive = true
-            layout.itemSize = CGSize(width: width / 3, height: width / 3)
+            layout.itemSize = CGSize(
+                                width: width / 3,
+                                height: width / 3)
         case 7, 8, 9:
             aspect11.isActive = true
-            layout.itemSize = CGSize(width: width / 3, height: width / 3)
+            layout.itemSize = CGSize(
+                                width: width / 3,
+                                height: width / 3)
         default:
             break
         }
@@ -104,3 +125,6 @@ class NewsImagesCollection: UITableViewCell,
         collectionView.reloadData()
     }
 }
+
+extension NewsImagesCollection: UICollectionViewDelegate,
+                                UICollectionViewDataSource { }

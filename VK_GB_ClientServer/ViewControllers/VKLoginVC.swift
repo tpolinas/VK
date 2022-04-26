@@ -43,12 +43,24 @@ final class VKLoginVC: UIViewController {
         components.host = "oauth.vk.com"
         components.path = "/authorize"
         components.queryItems = [
-            URLQueryItem(name: "client_id", value: "8082049"),
-            URLQueryItem(name: "display", value: "mobile"),
-            URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
-            URLQueryItem(name: "scope", value: "336918"),
-            URLQueryItem(name: "response_type", value: "token"),
-            URLQueryItem(name: "v", value: "5.131"),
+            URLQueryItem(
+                name: "client_id",
+                value: "8082049"),
+            URLQueryItem(
+                name: "display",
+                value: "mobile"),
+            URLQueryItem(
+                name: "redirect_uri",
+                value: "https://oauth.vk.com/blank.html"),
+            URLQueryItem(
+                name: "scope",
+                value: "336918"),
+            URLQueryItem(
+                name: "response_type",
+                value: "token"),
+            URLQueryItem(
+                name: "v",
+                value: "5.131"),
         ]
         return components
     }()
@@ -56,20 +68,21 @@ final class VKLoginVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard
-            let url = urlComponents.url
-        else { return }
-        
+        setup()
+    }
+    
+    private func setup() {
+        guard let url = urlComponents.url else { return }
         webView.load(URLRequest(url: url))
     }
 }
-
 
 extension VKLoginVC: WKNavigationDelegate {
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationResponse: WKNavigationResponse,
-        decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void
+    ) {
             guard
                 let url = navigationResponse.response.url,
                 url.path == "/blank.html",
@@ -96,9 +109,13 @@ extension VKLoginVC: WKNavigationDelegate {
             Singleton.instance.token = token
             Singleton.instance.userID = userID
             
-            let vc = storyboard?.instantiateViewController(withIdentifier: "main") as? UITabBarController
+            let vc = storyboard?.instantiateViewController(
+                withIdentifier: "main") as? UITabBarController
             vc?.modalPresentationStyle = .fullScreen
-            self.present(vc ?? UIViewController(), animated: true, completion: nil)
+            self.present(
+                vc ?? UIViewController(),
+                animated: true,
+                completion: nil)
             
             decisionHandler(.cancel)
     }

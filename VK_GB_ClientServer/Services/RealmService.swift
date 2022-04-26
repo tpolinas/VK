@@ -17,8 +17,9 @@ final class RealmService {
         update: Realm.UpdatePolicy = .modified) throws {
             let realm = try Realm(configuration: configuration)
             try realm.write {
-                realm.add(items,
-                          update: update)
+                realm.add(
+                    items,
+                    update: update)
             }
         }
     

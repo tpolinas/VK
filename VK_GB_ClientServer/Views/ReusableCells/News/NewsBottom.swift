@@ -17,22 +17,36 @@ class NewsBottom: UITableViewCell {
     @IBAction func buttonPressed(_ sender: UIButton) { }
     
     
-    func configure(isLiked: Bool,
-                   likesCounter: Int,
-                   commentsCounter: Int,
-                   sharedCounter: Int) {
+    func configure(
+        isLiked: Bool,
+        likesCounter: Int,
+        commentsCounter: Int,
+        sharedCounter: Int
+    ) {
         if isLiked {
-            likeButton.setImage(UIImage(systemName: "hand.thumbsup.fill"), for: .normal)
-            likeButton.setTitle("\(likesCounter)", for: .normal)
+            likeButton.setImage(
+                UIImage(systemName: "hand.thumbsup.fill"),
+                for: .normal)
+            likeButton.setTitle(
+                "\(likesCounter)",
+                for: .normal)
             likeButton.tintColor = .systemBlue
         } else {
-            likeButton.setImage(UIImage(systemName: "hand.thumbsup"), for: .normal)
-            likeButton.setTitle("\(likesCounter)", for: .normal)
+            likeButton.setImage(
+                UIImage(systemName: "hand.thumbsup"),
+                for: .normal)
+            likeButton.setTitle(
+                "\(likesCounter)",
+                for: .normal)
             likeButton.tintColor = .systemBlue
         }
         
-        commentsButton.setTitle("\(commentsCounter)", for: .normal)
-        shareButton.setTitle("\(sharedCounter)", for: .normal)
+        commentsButton.setTitle(
+            "\(commentsCounter)",
+            for: .normal)
+        shareButton.setTitle(
+            "\(sharedCounter)",
+            for: .normal)
 
     }
 }

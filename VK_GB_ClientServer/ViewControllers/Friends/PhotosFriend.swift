@@ -9,59 +9,34 @@ import UIKit
 import RealmSwift
 import Kingfisher
 
-class PhotosFriend: UIViewController,
-                    UIGestureRecognizerDelegate {
+class PhotosFriend: UIViewController {
     
     @IBOutlet var photo: UIImageView!
     
     var friend: UserRealm?
-    var photos: Results<PhotoRealm>? = try? RealmService.load(typeOf: PhotoRealm.self)
+    var photos: Results<PhotoRealm>? = try? RealmService.load(
+        typeOf: PhotoRealm.self)
     var chosenPhotoIndex = Int()
     private var photoSubview = UIImageView()
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
-        guard let photos = photos else { return }
-
-        title = "Photo \(chosenPhotoIndex + 1) of \(photos.count)"
-        
-        photo.kf.setImage(with: URL(string: photos[chosenPhotoIndex].url))
-        photo.isUserInteractionEnabled = true
-        photo.contentMode = .scaleAspectFill
-        photoSubview.contentMode = .scaleAspectFill
-
-        let swipeRight = UISwipeGestureRecognizer(
-            target: self,
-            action: #selector(swipePhoto(_:)))
-            swipeRight.direction = .right
-            view.addGestureRecognizer(swipeRight)
-
-        let swipeLeft = UISwipeGestureRecognizer(
-            target: self,
-            action: #selector(swipePhoto(_:)))
-            swipeLeft.direction = .left
-            view.addGestureRecognizer(swipeLeft)
-        
-        let swipeDown = UISwipeGestureRecognizer(
-            target: self,
-            action: #selector(swipePhoto(_:)))
-            swipeDown.direction = .down
-            view.addGestureRecognizer(swipeDown)
+        setup()
     }
     
     override func viewWillDisappear(_ animated: Bool = false) {
-        if let vc = storyboard?.instantiateViewController(withIdentifier: "friendCVC") as? Friend {
+        if let vc = storyboard?.instantiateViewController(
+            withIdentifier: "friendCVC") as? Friend {
             vc.friend = friend
             Friend.mutableIndex = chosenPhotoIndex
         }
     }
     
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                           shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        true
-    }
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool { true }
     
     @objc func swipePhoto(_ gesture: UIGestureRecognizer) {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
@@ -81,7 +56,6 @@ class PhotosFriend: UIViewController,
     }
     
     func animateFlip() {
-        
         view.layoutIfNeeded()
         
         UIView.animateKeyframes(
@@ -110,8 +84,8 @@ class PhotosFriend: UIViewController,
                 
             } completion: { isCompleted in
                 
-                self.photo.kf.setImage(with: URL(string: self.photos![self.chosenPhotoIndex].url))
-
+                self.photo.kf.setImage(
+                    with: URL(string: self.photos![self.chosenPhotoIndex].url))
                 self.photo.alpha = 1
                 self.view.layoutIfNeeded()
             }
@@ -153,4 +127,35 @@ class PhotosFriend: UIViewController,
         view.addSubview(photoSubview)
         
        }
+    
+    private func setup() {
+        guard let photos = photos else { return }
+        title = "Photo \(chosenPhotoIndex + 1) of \(photos.count)"
+        
+        photo.kf.setImage(
+            with: URL(string: photos[chosenPhotoIndex].url))
+        photo.isUserInteractionEnabled = true
+        photo.contentMode = .scaleAspectFill
+        photoSubview.contentMode = .scaleAspectFill
+
+        let swipeRight = UISwipeGestureRecognizer(
+            target: self,
+            action: #selector(swipePhoto(_:)))
+            swipeRight.direction = .right
+            view.addGestureRecognizer(swipeRight)
+
+        let swipeLeft = UISwipeGestureRecognizer(
+            target: self,
+            action: #selector(swipePhoto(_:)))
+            swipeLeft.direction = .left
+            view.addGestureRecognizer(swipeLeft)
+        
+        let swipeDown = UISwipeGestureRecognizer(
+            target: self,
+            action: #selector(swipePhoto(_:)))
+            swipeDown.direction = .down
+            view.addGestureRecognizer(swipeDown)
+    }
 }
+
+extension PhotosFriend: UIGestureRecognizerDelegate { }

@@ -33,12 +33,18 @@ final class GroupsPromiseKit {
         constructor.path = "/method/groups.get"
         
         constructor.queryItems = [
-            URLQueryItem(name: "user_id",
-                         value: "\(Singleton.instance.userID)"),
-            URLQueryItem(name: "extended", value: "1"),
-            URLQueryItem(name: "access_token",
-                         value: "\(Singleton.instance.token)"),
-            URLQueryItem(name: "v", value: "5.131"),
+            URLQueryItem(
+                name: "user_id",
+                value: "\(Singleton.instance.userID)"),
+            URLQueryItem(
+                name: "extended",
+                value: "1"),
+            URLQueryItem(
+                name: "access_token",
+                value: "\(Singleton.instance.token)"),
+            URLQueryItem(
+                name: "v",
+                value: "5.131"),
         ]
         return constructor
     }()
@@ -64,7 +70,10 @@ final class GroupsPromiseKit {
     func decodeGroups(data: Data) -> Promise<[Group]> {
         return Promise { resolver in
             do {
-                let json = try JSONDecoder().decode(Response<Group>.self, from: data).response.items
+                let json = try JSONDecoder().decode(
+                    Response<Group>.self,
+                    from: data)
+                    .response.items
                 resolver.fulfill(json)
             } catch {
                 resolver.reject(AppError.failedToDecode)

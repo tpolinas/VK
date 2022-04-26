@@ -7,8 +7,7 @@
 
 import UIKit
 
-final class PushAnimator: NSObject,
-                          UIViewControllerAnimatedTransitioning {
+final class PushAnimator: NSObject {
     
     private let animateTime = 0.5
     
@@ -72,8 +71,7 @@ final class PushAnimator: NSObject,
 
 
 
-final class PopAnimator: NSObject,
-                         UIViewControllerAnimatedTransitioning {
+final class PopAnimator: NSObject {
     
     private let animateTime = 0.5
     
@@ -134,7 +132,7 @@ final class PopAnimator: NSObject,
     }
 }
 
-final class PopPhoto: NSObject, UIViewControllerAnimatedTransitioning {
+final class PopPhoto: NSObject {
 
     private let animateTime = 0.0
 
@@ -157,7 +155,7 @@ final class PopPhoto: NSObject, UIViewControllerAnimatedTransitioning {
     }
 }
 
-final class PushPhoto: NSObject, UIViewControllerAnimatedTransitioning {
+final class PushPhoto: NSObject {
     
     private let animateTime = 1.0
     
@@ -170,4 +168,9 @@ final class PushPhoto: NSObject, UIViewControllerAnimatedTransitioning {
 
     }
 }
+
+extension PushAnimator: UIViewControllerAnimatedTransitioning { }
+extension PopAnimator: UIViewControllerAnimatedTransitioning { }
+extension PopPhoto: UIViewControllerAnimatedTransitioning { }
+extension PushPhoto: UIViewControllerAnimatedTransitioning { }
 

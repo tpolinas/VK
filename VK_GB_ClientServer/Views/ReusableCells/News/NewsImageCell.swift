@@ -8,8 +8,7 @@
 import UIKit
 import Kingfisher
 
-class NewsImageCell: UICollectionViewCell,
-                     UIGestureRecognizerDelegate {
+class NewsImageCell: UICollectionViewCell {
 
     @IBOutlet var newsImage: UIImageView!
     
@@ -27,3 +26,5 @@ class NewsImageCell: UICollectionViewCell,
         newsImage.image = nil
     }
 }
+
+extension NewsImageCell: UIGestureRecognizerDelegate { }

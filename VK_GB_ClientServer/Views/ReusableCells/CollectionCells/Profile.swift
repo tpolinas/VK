@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-class FriendPage: UICollectionViewCell {
+class Profile: UICollectionViewCell {
 
     @IBOutlet var friendPhoto: UIImageView!
     @IBOutlet var likeButton: UIButton!
@@ -19,23 +19,36 @@ class FriendPage: UICollectionViewCell {
         sender.isSelected  = !sender.isSelected
         
         if sender.isSelected {
-            animateLike(sender, "heart.fill")
-            sender.setTitle("\(likeCount + 1)", for: .normal)
+            animateLike(
+                sender,
+                "heart.fill")
+            sender.setTitle(
+                "\(likeCount + 1)",
+                for: .normal)
         } else {
-            animateLike(sender, "heart")
-            sender.setTitle("\(likeCount)", for: .normal)
+            animateLike(
+                sender,
+                "heart")
+            sender.setTitle(
+                "\(likeCount)",
+                for: .normal)
         }
     }
 
-    func animateLike(_ sender: UIButton,
-                     _ imageName: String) {
-        
+    func animateLike(
+        _ sender: UIButton,
+        _ imageName: String
+    ) {
             UIView.transition(
                 with: sender.imageView!,
                 duration: 0.5,
-                options: [ .transitionFlipFromLeft])
-            {
-                sender.setImage(UIImage(systemName: imageName), for: .normal)
+                options: [
+                    .transitionFlipFromLeft
+                ]
+            ){
+                sender.setImage(
+                    UIImage(systemName: imageName),
+                    for: .normal)
             }
     }
     

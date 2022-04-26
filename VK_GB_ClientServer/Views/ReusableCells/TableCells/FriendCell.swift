@@ -15,7 +15,10 @@ class FriendCell: UITableViewCell {
         AvatarImage.animateAvatar(friendAvatar)
     }
     
-    func configure(name: String, url: String) {
+    func configure(
+        name: String,
+        url: String
+    ) {
         self.friendAvatar.isHidden = true
         self.friendAvatar.image = nil
         self.friendAvatar.kf.setImage(

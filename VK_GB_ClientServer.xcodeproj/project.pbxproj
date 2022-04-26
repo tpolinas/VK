@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		039EB6AB479A7DFDC156CCF5 /* Pods_VK_GB_ClientServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0308EAF5706C6A907D205888 /* Pods_VK_GB_ClientServer.framework */; };
+		3A1656F5281843AB004FA903 /* UITableViewRemoveReuseIdentifierExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1656F4281843AB004FA903 /* UITableViewRemoveReuseIdentifierExtension.swift */; };
 		3A1F134627F8F7350042FC8E /* NewsTopCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A1F134527F8F7350042FC8E /* NewsTopCell.xib */; };
 		3A23BD0F27F0DCCB0072A345 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A23BD0E27F0DCCB0072A345 /* AppDelegate.swift */; };
 		3A23BD1127F0DCCB0072A345 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A23BD1027F0DCCB0072A345 /* SceneDelegate.swift */; };
@@ -71,6 +72,7 @@
 
 /* Begin PBXFileReference section */
 		0308EAF5706C6A907D205888 /* Pods_VK_GB_ClientServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VK_GB_ClientServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A1656F4281843AB004FA903 /* UITableViewRemoveReuseIdentifierExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewRemoveReuseIdentifierExtension.swift; sourceTree = "<group>"; };
 		3A1F134327F8F71D0042FC8E /* NewsTopCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewsTopCell.xib; sourceTree = "<group>"; };
 		3A1F134527F8F7350042FC8E /* NewsTopCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewsTopCell.xib; sourceTree = "<group>"; };
 		3A23BD0B27F0DCCB0072A345 /* VK_GB_ClientServer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VK_GB_ClientServer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -199,6 +201,7 @@
 			children = (
 				3A23BD2827F0DE020072A345 /* UIImageDownloadFromURL.swift */,
 				3A601AB927F5EDAA0049780A /* DateFormatter.swift */,
+				3A1656F4281843AB004FA903 /* UITableViewRemoveReuseIdentifierExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -534,6 +537,7 @@
 				3A601ABC27F5EE150049780A /* Response.swift in Sources */,
 				3A23BD3927F0DFE00072A345 /* GroupModel.swift in Sources */,
 				3A23BD2F27F0DF0F0072A345 /* CustomAnimators.swift in Sources */,
+				3A1656F5281843AB004FA903 /* UITableViewRemoveReuseIdentifierExtension.swift in Sources */,
 				3A59F72327F48CFA00C839D2 /* NewsModel.swift in Sources */,
 				3A23BD0F27F0DCCB0072A345 /* AppDelegate.swift in Sources */,
 				3A23BD4F27F0E2580072A345 /* PhotosFriend.swift in Sources */,

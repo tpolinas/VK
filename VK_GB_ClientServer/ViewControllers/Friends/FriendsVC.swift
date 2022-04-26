@@ -8,8 +8,7 @@
 import UIKit
 import RealmSwift
 
-final class FriendsVC: UITableViewController,
-                       UIGestureRecognizerDelegate {
+final class FriendsVC: UITableViewController {
     
     @IBOutlet var searchBar: UISearchBar!
     
@@ -19,7 +18,9 @@ final class FriendsVC: UITableViewController,
     private let networkService = NetworkService<User>()
     private let networkServiceOperation = NetworkServiceOperation()
     private let friendsOperationService = FriendsOperationService.instance
-    private var friends: Results<UserRealm>? = try? RealmService.load(typeOf: UserRealm.self)
+    private var friends: Results<UserRealm>? = try? RealmService.load(
+                typeOf: UserRealm.self)
+    private var friendsToken: NotificationToken?
     private var friendsRealm = [UserRealm]() {
         didSet {
             DispatchQueue.main.async {
@@ -27,7 +28,6 @@ final class FriendsVC: UITableViewController,
             }
         }
     }
-    private var friendsToken: NotificationToken?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,10 +35,7 @@ final class FriendsVC: UITableViewController,
         searchBar.delegate = self
         tableView.sectionHeaderTopPadding = 0
         
-        tableView.register(UINib(
-            nibName: "FriendCell",
-            bundle: nil),
-            forCellReuseIdentifier: "friendCell")
+        tableView.registerWithNib(registerClass: FriendCell.self)
         
         networkServiceFunction()
         friendsOperationService.fetchFriends { friend in
@@ -73,7 +70,10 @@ final class FriendsVC: UITableViewController,
         friendsSectionTitles.count
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(
+        _ tableView: UITableView,
+        numberOfRowsInSection section: Int
+    ) -> Int {
         friendsFilteredDictionary[friendsSectionTitles[section]]!.count
     }
     
@@ -81,22 +81,30 @@ final class FriendsVC: UITableViewController,
         return friendsSectionTitles
     }
 
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(
+        _ tableView: UITableView,
+        titleForHeaderInSection section: Int
+    ) -> String? {
         return friendsSectionTitles[section]
     }
     
-    override func tableView(_ tableView: UITableView,
-                            willDisplayHeaderView view: UIView,
-                            forSection section: Int) {
-        
+    override func tableView(
+        _ tableView: UITableView,
+        willDisplayHeaderView view: UIView,
+        forSection section: Int
+    ) {
         let header = view as? UITableViewHeaderFooterView
         header?.tintColor = UIColor.gray.withAlphaComponent(0.05)
     }
     
-    override func tableView(_ tableView: UITableView,
-                            cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? FriendCell else { return UITableViewCell() }
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: FriendCell.self,
+            forIndexPath: indexPath)
+        else { return UITableViewCell() }
         let letterKey = friendsSectionTitles[indexPath.section]
            if let friendsOnLetterKey = friendsFilteredDictionary[letterKey] {
                let myFriend = friendsOnLetterKey[indexPath.row]
@@ -109,14 +117,14 @@ final class FriendsVC: UITableViewController,
     }
     
     func networkServiceFunction() {
-        
         networkService.fetch(type: .friends) { [weak self] result in
             switch result {
             case .success(let responseFriends):
                     let items = responseFriends.map { UserRealm(user: $0) }
                     do {
                         try RealmService.save(items: items)
-                        self?.friends = try RealmService.load(typeOf: UserRealm.self)
+                        self?.friends = try RealmService.load(
+                            typeOf: UserRealm.self)
                     } catch {
                         print(error)
                     }
@@ -127,8 +135,7 @@ final class FriendsVC: UITableViewController,
     }
     
     func sortFriends() {
-        guard let friends = friends
-        else { return }
+        guard let friends = friends else { return }
             for friend in friends where friend.firstName != "DELETED" {
                 friendsDictionary.removeAll()
                 
@@ -149,10 +156,13 @@ final class FriendsVC: UITableViewController,
             self.tableView.reloadData()
     }
     
-    override func prepare(for segue: UIStoryboardSegue,
-                          sender: Any? ) {
-        
-        guard segue.identifier == "goToFriend", let indexPath = tableView.indexPathForSelectedRow else { return }
+    override func prepare(
+        for segue: UIStoryboardSegue,
+        sender: Any?
+    ) {
+        guard segue.identifier == "goToFriend",
+              let indexPath = tableView.indexPathForSelectedRow
+        else { return }
         guard let destination = segue.destination as? Friend else { return }
         let letterKey = friendsSectionTitles[indexPath.section]
            if let friendsOnLetterKey = friendsFilteredDictionary[letterKey] {
@@ -160,23 +170,26 @@ final class FriendsVC: UITableViewController,
            }
     }
     
-    override func tableView(_ tableView: UITableView,
-                            didSelectRowAt indexPath: IndexPath) {
-        
+    override func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
         defer {
             tableView.deselectRow(
                 at: indexPath,
                 animated: true)
         }
-        performSegue(withIdentifier: "goToFriend", sender: nil)
+        performSegue(
+            withIdentifier: "goToFriend",
+            sender: nil)
     }
 }
 
 extension FriendsVC: UISearchBarDelegate {
-
-    func searchBar(_ searchBar: UISearchBar,
-                   textDidChange searchText: String) {
-        
+    func searchBar(
+        _ searchBar: UISearchBar,
+        textDidChange searchText: String
+    ) {
         searchBar.showsCancelButton = true
         guard !searchText.isEmpty else {
             friendsFilteredDictionary = friendsDictionary
@@ -193,13 +206,13 @@ extension FriendsVC: UISearchBarDelegate {
             friendsFilteredDictionary[key] = friend.filter({ $0.fullName.lowercased().contains(searchText.lowercased()) })
         }
 
-        friendsSectionTitles = ([String](friendsFilteredDictionary.keys).sorted())
-                                .filter({ !friendsFilteredDictionary[$0]!.isEmpty })
+        friendsSectionTitles = ([String](friendsFilteredDictionary.keys)
+                                        .sorted())
+                                        .filter({ !friendsFilteredDictionary[$0]!.isEmpty })
         tableView.reloadData()
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        
         searchBar.text = nil
         searchBar.showsCancelButton = false
         searchBar.endEditing(true)
@@ -215,3 +228,5 @@ extension FriendsVC: UISearchBarDelegate {
         searchBar.showsCancelButton = true
     }
 }
+
+extension FriendsVC: UIGestureRecognizerDelegate { }

@@ -15,46 +15,27 @@ final class Friend: UICollectionViewController {
     
     private var viewForSmooth = UIView()
     private var currentIndex = Int()
-    private var chosenPhoto = FriendPage()
+    private var chosenPhoto = Profile()
     private var enlargedPhoto = UIImageView()
     private let networkService = NetworkService<Photos>()
     private let friendsOperationService = FriendsOperationService.instance
-    private var photos: Results<PhotoRealm>? = try? RealmService.load(typeOf: PhotoRealm.self)
+    private var photos: Results<PhotoRealm>? = try? RealmService.load(
+                typeOf: PhotoRealm.self)
     private var photosToken: NotificationToken?
     private var friendsRealm = [UserRealm]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        viewForSmooth.alpha = 0.0
         configureLayout()
-        
-        friendsOperationService.fetchFriends { friend in
-            self.friendsRealm = friend
-        }
-
-        collectionView.register(
-            UINib(
-                nibName: "Profile",
-                bundle: nil),
-            forCellWithReuseIdentifier: "friendPageCell")
-        
-        collectionView.register(
-            UINib(
-                nibName: "ProfileHeader",
-                bundle: nil),
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: "friendHeader")
-        
+        setupView()
         networkServiceFunction()
     }
     
     override func viewWillAppear(_ animated: Bool = false) {
         if CGFloat(viewForSmooth.alpha).rounded(.up) == 1 {
-            enlargedPhoto.downloaded(from: photos![Friend.mutableIndex].url)
+            enlargedPhoto.downloaded(
+                from: photos![Friend.mutableIndex].url)
             viewForSmooth.alpha = 1.0
             finalAnimation([0, Friend.mutableIndex])
         }
@@ -63,35 +44,7 @@ final class Friend: UICollectionViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        photosToken = photos?.observe { [weak self] photosChanges in
-            guard let self = self else { return }
-            switch photosChanges {
-            case .initial(_):
-                self.collectionView.reloadData()
-            case let .update(
-                _,
-                deletions: deletions,
-                insertions: insertions,
-                modifications: modifications):
-                
-                let delRowsIndex = deletions.map { IndexPath(
-                    row: $0,
-                    section: 0) }
-                let insertRowsIndex = insertions.map { IndexPath(
-                    row: $0,
-                    section: 0)}
-                let modificationIndex = modifications.map { IndexPath(
-                    row: $0,
-                    section: 0)}
-                
-                self.collectionView.deleteItems(at: delRowsIndex)
-                self.collectionView.insertItems(at: insertRowsIndex)
-                self.collectionView.reloadItems(at: modificationIndex)
-                
-            case .error(let error):
-                print(error)
-            }
-        }
+        setup()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -103,22 +56,24 @@ final class Friend: UICollectionViewController {
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        1
+        numberOfSectionsInCollectionView
     }
 
-    override func collectionView(_ collectionView: UICollectionView,
-                                 numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
         photos?.count ?? 0
     }
     
-    override func collectionView(_ collectionView: UICollectionView,
-                                 viewForSupplementaryElementOfKind kind: String,
-                                 at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        guard let header = collectionView.dequeueReusableSupplementaryView(
-                ofKind: UICollectionView.elementKindSectionHeader,
-                withReuseIdentifier: "friendHeader",
-                for: indexPath) as? ProfileHeader
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
+        guard let header = collectionView.dequeueReusableSectionHeader(
+            withIdentifier: ProfileHeader.self,
+            forIndexPath: indexPath)
         else { return UICollectionReusableView() }
         
         guard let currentFriend = friend else { return UICollectionViewCell() }
@@ -126,17 +81,18 @@ final class Friend: UICollectionViewController {
         header.configure(
             friendName: currentFriend.fullName,
             url: currentFriend.photo,
-            friendGender: (currentFriend.sex == 1) ? "female":"male" )
+            friendGender: (currentFriend.sex == 1) ? "female" : "male")
         
         return header
     }
 
-    override func collectionView(_ collectionView: UICollectionView,
-                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "friendPageCell",
-            for: indexPath) as? FriendPage
+            withIdentifier: Profile.self,
+            forIndexPath: indexPath)
         else { return UICollectionViewCell() }
         
         cell.configure(
@@ -146,23 +102,32 @@ final class Friend: UICollectionViewController {
     }
     
     func configureLayout() {
-        
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         let width = UIScreen.main.bounds.width
 
-        layout.headerReferenceSize = CGSize(width: width, height: 120)
+        layout.headerReferenceSize = CGSize(
+                                        width: width,
+                                        height: 120)
         layout.sectionHeadersPinToVisibleBounds = true
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.itemSize = CGSize(width: width / 3, height: width / 3)
+        layout.sectionInset = UIEdgeInsets(
+                                    top: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    right: 0)
+        layout.itemSize = CGSize(
+                            width: width / 3,
+                            height: width / 3)
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
         collectionView.collectionViewLayout = layout
     }
     
-    override func collectionView(_ collectionView: UICollectionView,
-                                 didSelectItemAt indexPath: IndexPath) {
-        if let vc = storyboard?
-            .instantiateViewController(withIdentifier: "showPhoto") as? PhotosFriend {
+    override func collectionView(
+        _ collectionView: UICollectionView,
+        didSelectItemAt indexPath: IndexPath
+    ) {
+        if let vc = storyboard?.instantiateViewController(
+                withIdentifier: "showPhoto") as? PhotosFriend {
                 vc.photos = photos!
                 vc.chosenPhotoIndex = indexPath.row
                 currentIndex = indexPath.row
@@ -171,11 +136,13 @@ final class Friend: UICollectionViewController {
         }
     }
     
-    func primaryAnimation(_ chosenIndex: IndexPath, _ vc: PhotosFriend) {
-        
+    func primaryAnimation(
+        _ chosenIndex: IndexPath,
+        _ vc: PhotosFriend
+    ) {
         viewForSmooth.backgroundColor = UIColor.white
         viewForSmooth.frame = view.bounds
-        chosenPhoto = collectionView.cellForItem(at: chosenIndex) as! FriendPage
+        chosenPhoto = collectionView.cellForItem(at: chosenIndex) as! Profile
 
         enlargedPhoto = UIImageView(image: chosenPhoto.friendPhoto.image)
         enlargedPhoto.contentMode = .scaleAspectFill
@@ -224,8 +191,7 @@ final class Friend: UICollectionViewController {
     }
     
     func finalAnimation(_ chosenIndex: IndexPath) {
-        
-        chosenPhoto = collectionView.cellForItem(at: chosenIndex) as! FriendPage
+        chosenPhoto = collectionView.cellForItem(at: chosenIndex) as! Profile
         
         let x = chosenPhoto.frame.midX
         let y = chosenPhoto.frame.midY + chosenPhoto.frame.size.height/1.33
@@ -267,7 +233,9 @@ final class Friend: UICollectionViewController {
     }
     
     func networkServiceFunction() {
-        networkService.fetch(type: .photos, id: friend!.id){ [weak self] result in
+        networkService.fetch(
+                        type: .photos,
+                        id: friend!.id) { [weak self] result in
             switch result {
             case .success(let photos):
                 DispatchQueue.main.async {
@@ -284,5 +252,58 @@ final class Friend: UICollectionViewController {
                 print(error)
             }
         }
+    }
+    
+    private func setupView() {
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        viewForSmooth.alpha = 0.0
+        
+        friendsOperationService.fetchFriends { friend in
+            self.friendsRealm = friend
+        }
+
+        collectionView.registerWithNib(registerClass: Profile.self)
+        
+        collectionView.registerWithNibSectionHeader(registerClass: ProfileHeader.self)
+    }
+    
+    private func setup() {
+        photosToken = photos?.observe { [weak self] photosChanges in
+            guard let self = self else { return }
+            switch photosChanges {
+            case .initial(_):
+                self.collectionView.reloadData()
+            case let .update(
+                _,
+                deletions: deletions,
+                insertions: insertions,
+                modifications: modifications):
+                
+                let delRowsIndex = deletions.map { IndexPath(
+                    row: $0,
+                    section: 0) }
+                let insertRowsIndex = insertions.map { IndexPath(
+                    row: $0,
+                    section: 0)}
+                let modificationIndex = modifications.map { IndexPath(
+                    row: $0,
+                    section: 0)}
+                
+                self.collectionView.deleteItems(at: delRowsIndex)
+                self.collectionView.insertItems(at: insertRowsIndex)
+                self.collectionView.reloadItems(at: modificationIndex)
+                
+            case .error(let error):
+                print(error)
+            }
+        }
+    }
+}
+
+extension Friend {
+    var numberOfSectionsInCollectionView: Int {
+        return 1
     }
 }

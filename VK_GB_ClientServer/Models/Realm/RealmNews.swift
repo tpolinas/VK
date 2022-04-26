@@ -24,11 +24,13 @@ extension RealmNews {
             date: Date,
             text: String,
             commentsCount: Int,
-            repostsCount: Int)  {
+            repostsCount: Int
+    )  {
                 
         self.init()
                 
-        self.id = String(sourceID) + "_" + date.toString(dateFormat: .dateTime)
+        self.id = String(sourceID) + "_" + date.toString(
+                                                dateFormat: .dateTime)
         self.sourceID = sourceID
         self.date = date
         self.text = text

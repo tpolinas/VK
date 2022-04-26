@@ -7,12 +7,13 @@
 
 import UIKit
 
-final class CustomNavigationController: UIPercentDrivenInteractiveTransition {
+final class CustomNavigationController:
+    UIPercentDrivenInteractiveTransition {
     var isStarted = false
     var shouldFinish = false
 }
 
-final class CustomNavController: UINavigationController, UINavigationControllerDelegate {
+final class CustomNavController: UINavigationController {
     
     let pushAnimation = PushAnimator()
     let popAnimation = PopAnimator()
@@ -22,7 +23,6 @@ final class CustomNavController: UINavigationController, UINavigationControllerD
     private let interactiveTransition = CustomNavigationController()
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         delegate = self
         
@@ -70,7 +70,8 @@ final class CustomNavController: UINavigationController, UINavigationControllerD
         _ navigationController: UINavigationController,
         animationControllerFor operation: UINavigationController.Operation,
         from fromVC: UIViewController,
-        to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        to toVC: UIViewController
+    ) -> UIViewControllerAnimatedTransitioning? {
             
             if fromVC is PhotosFriend {
                 return popPhoto
@@ -93,7 +94,10 @@ final class CustomNavController: UINavigationController, UINavigationControllerD
     func navigationController(
         _ navigationController: UINavigationController,
         interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-            return interactiveTransition.isStarted ? interactiveTransition : nil
+            return interactiveTransition.isStarted
+            ? interactiveTransition : nil
     }
 }
+
+extension CustomNavController: UINavigationControllerDelegate { }
 
