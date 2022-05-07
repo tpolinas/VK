@@ -13,6 +13,7 @@ class NewsImagesCollection: UITableViewCell {
     var photoURLs: [String] = []
     var numberOfItems = CGFloat()
     private var imageCacheService: PhotoCacheService?
+    static var collectionHeight = [IndexPath : CGFloat]()
     
     @IBOutlet var collectionView: UICollectionView!
     @IBOutlet var aspect11: NSLayoutConstraint!
@@ -34,11 +35,17 @@ class NewsImagesCollection: UITableViewCell {
         numberOfItems = CGFloat(photoURLs.count)
         configureLayout()
      
-        collectionView.register(
-               UINib(
-                   nibName: "NewsImageCell",
-                   bundle: nil),
-               forCellWithReuseIdentifier: "NewsImageCell")
+        collectionView.registerWithNib(registerClass: NewsImageCell.self)
+    }
+    
+    func configure(
+        currentNews: News?,
+        indexPath: IndexPath
+    ) {
+        guard let news = currentNews else { return }
+        self.currentNews = news
+        configureLayout()
+        NewsImagesCollection.collectionHeight[indexPath] = collectionView.frame.size.height
     }
     
     func collectionView(
@@ -54,8 +61,8 @@ class NewsImagesCollection: UITableViewCell {
     ) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "NewsImageCell",
-            for: indexPath) as? NewsImageCell
+            withIdentifier: NewsImageCell.self,
+            forIndexPath: indexPath)
         else { return UICollectionViewCell() }
 
         let image = imageCacheService?.photo(

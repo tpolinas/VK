@@ -32,6 +32,7 @@ final class NetworkService<ItemsType: Decodable>  {
         type: requestType,
         q: String? = "",
         id: Int? = 0,
+        nextFrom: String? = "",
         completion: @escaping (Result<[ItemsType], Error>) -> Void
     ) {
         var constructor = urlConstructor
@@ -130,6 +131,9 @@ final class NetworkService<ItemsType: Decodable>  {
                 URLQueryItem(
                     name: "filters",
                     value: "post, photo"),
+                URLQueryItem(
+                    name: "start_from",
+                    value: nextFrom),
                 URLQueryItem(
                     name: "max_photos",
                     value: "9"),
