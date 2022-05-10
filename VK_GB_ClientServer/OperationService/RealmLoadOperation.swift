@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 
 final class RealmLoadOperation: AsyncOperation {
-    var friends = [UserRealm]()
+    public var friends = [UserRealm]()
     
     override func main() {
         guard let data = dependencies.first as? RealmSaveOperation?,

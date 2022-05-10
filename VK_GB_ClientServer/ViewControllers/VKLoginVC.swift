@@ -9,8 +9,7 @@ import UIKit
 import WebKit
 
 final class VKLoginVC: UIViewController {
-    
-    @IBOutlet var webView: WKWebView! {
+    @IBOutlet weak var webView: WKWebView! {
         didSet {
             webView.navigationDelegate = self
         }
@@ -67,7 +66,6 @@ final class VKLoginVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setup()
     }
     
@@ -99,7 +97,6 @@ extension VKLoginVC: WKNavigationDelegate {
                     dict[key] = value
                     return dict
                 }
-            
             guard
                 let token = parameters["access_token"],
                 let userIDString = parameters["user_id"],

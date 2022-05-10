@@ -9,8 +9,7 @@ import UIKit
 import Kingfisher
 
 class NewsImageCell: UICollectionViewCell {
-
-    @IBOutlet var newsImage: UIImageView!
+    @IBOutlet weak var newsImage: UIImageView!
     
     func configure(image: UIImage?) {
         self.newsImage.isHidden = true
@@ -22,7 +21,6 @@ class NewsImageCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        
         newsImage.image = nil
     }
 }

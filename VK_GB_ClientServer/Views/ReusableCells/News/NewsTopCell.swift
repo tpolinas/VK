@@ -9,12 +9,11 @@ import UIKit
 import Kingfisher
 
 class NewsTopCell: UITableViewCell {
-
-    @IBOutlet var groupAvatar: UIImageView!
-    @IBOutlet var groupName: UILabel!
-    @IBOutlet var newsTime: UILabel!
+    @IBOutlet weak var groupAvatar: UIImageView!
+    @IBOutlet weak var groupName: UILabel!
+    @IBOutlet weak var newsTime: UILabel!
     
-    func configure(
+    public func configure(
         avatar: String,
         name: String,
         newsTime: String

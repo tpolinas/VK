@@ -9,8 +9,7 @@ import UIKit
 import RealmSwift
 
 class NewsVC: UITableViewController {
-    
-    enum Identifier: Int {
+    private enum Identifier: Int {
         case top
         case text
         case image
@@ -18,8 +17,7 @@ class NewsVC: UITableViewController {
     }
     
     private let networkService = NetworkService<News>()
-    
-    var userNews = [News]() {
+    private var userNews = [News]() {
             didSet {
             for index in userNews.indices {
                 let indexPath: IndexPath = [index, 1]
@@ -31,13 +29,15 @@ class NewsVC: UITableViewController {
         }
     }
 
-    private let newsService = NewsService.instance
     static var nextFrom: String?
-    var isLoading = false
-    var textCellState = [IndexPath : Bool]()
-    var indexOfCell: Identifier?
-    var anotherQueue: DispatchQueue = DispatchQueue.init(label: "anotherQueue")
-    var oneMoreQueue: DispatchQueue = DispatchQueue.init(label: "oneMoreQueue")
+    private let newsService = NewsService.instance
+    private var isLoading = false
+    private var textCellState = [IndexPath : Bool]()
+    private var indexOfCell: Identifier?
+    private var anotherQueue: DispatchQueue = DispatchQueue.init(
+                                                label: "anotherQueue")
+    private var oneMoreQueue: DispatchQueue = DispatchQueue.init(
+                                                label: "oneMoreQueue")
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,10 +83,14 @@ class NewsVC: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    override func numberOfSections(
+        in tableView: UITableView
+    ) -> Int {
         return userNews.count
     }
 
+    private let newsCellCount: Int = 4
+    
     override func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
@@ -123,6 +127,9 @@ class NewsVC: UITableViewController {
                 forIndexPath: indexPath)
             else { return UITableViewCell() }
             let group = loadGroupByID(news.sourceID)
+            guard
+                group?.avatar != nil
+            else { return UITableViewCell() }
             
             cell.configure(
                 avatar: group!.avatar,
@@ -131,7 +138,6 @@ class NewsVC: UITableViewController {
                                     dateFormat: .dateTime))
             
             return cell
-            
         case .text:
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: NewsTextCell.self,
@@ -151,7 +157,6 @@ class NewsVC: UITableViewController {
             cell.selectionStyle = .none
             
             return cell
-            
         case .image:
             var photos = [String]()
             news.photosURLs?.forEach({ index in
@@ -159,7 +164,6 @@ class NewsVC: UITableViewController {
                 
                 photos.append(photoURL)
             })
-            
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: NewsImagesCollection.self,
                 forIndexPath: indexPath)
@@ -172,7 +176,6 @@ class NewsVC: UITableViewController {
             cell.photoURLs = photos
 
             return cell
-            
         case .bottom:
             guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: NewsBottom.self,
@@ -186,13 +189,12 @@ class NewsVC: UITableViewController {
                 sharedCounter: news.reposts.count)
 
             return cell
-            
         case .none:
             return UITableViewCell()
         }
     }
     
-    private func loadGroupByID(_ id: Int) -> Group? {
+    public func loadGroupByID(_ id: Int) -> Group? {
         do {
             let realmGroups: [GroupRealm] = try RealmService.load(
                 typeOf: GroupRealm.self)
@@ -210,7 +212,7 @@ class NewsVC: UITableViewController {
         }
     }
     
-    fileprivate func setupRefreshControl() {
+    private func setupRefreshControl() {
         tableView.refreshControl = UIRefreshControl()
         tableView.refreshControl?.tintColor = .cyan
         tableView.refreshControl?.attributedTitle = NSAttributedString(string: "Updating...")
@@ -220,7 +222,7 @@ class NewsVC: UITableViewController {
             for: .valueChanged)
     }
 
-    @objc func refreshNews() {
+    @objc private func refreshNews() {
         DispatchQueue.global(qos: .userInteractive).async {
             self.newsService.getNews {
                 self.oneMoreQueue.sync {
@@ -254,14 +256,11 @@ class NewsVC: UITableViewController {
     
     private func setup() {
         tableView.sectionHeaderTopPadding = 0
-        
         tableView.registerWithNib(registerClass: NewsTopCell.self)
         tableView.registerWithNib(registerClass: NewsTextCell.self)
         tableView.registerWithNib(registerClass: NewsImagesCollection.self)
         tableView.registerWithNib(registerClass: NewsBottom.self)
     }
-    
-    private let newsCellCount: Int = 4
 }
 
 extension NewsVC: UICollectionViewDelegate,
@@ -270,7 +269,6 @@ extension NewsVC: UICollectionViewDelegate,
 extension NewsVC: ExpandableLabelDelegate {
     func didPressButton(at indexPath: IndexPath) {
         print(indexPath)
-
         guard let state = textCellState[indexPath] else { return }
         textCellState[indexPath] = !state
         tableView.reloadRows(

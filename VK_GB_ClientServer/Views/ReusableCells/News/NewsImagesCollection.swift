@@ -8,18 +8,17 @@
 import UIKit
 
 class NewsImagesCollection: UITableViewCell {
-    
-    var currentNews: News? = nil
-    var photoURLs: [String] = []
-    var numberOfItems = CGFloat()
-    private var imageCacheService: PhotoCacheService?
-    static var collectionHeight = [IndexPath : CGFloat]()
-    
-    @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet var aspect11: NSLayoutConstraint!
     @IBOutlet var aspect21: NSLayoutConstraint!
     @IBOutlet var aspect31: NSLayoutConstraint!
     @IBOutlet var aspect32: NSLayoutConstraint!
+    
+    public var currentNews: News? = nil
+    public var photoURLs: [String] = []
+    public static var collectionHeight = [IndexPath : CGFloat]()
+    private var numberOfItems = CGFloat()
+    private var imageCacheService: PhotoCacheService?
     
     override func setSelected(
         _ selected: Bool,
@@ -30,15 +29,14 @@ class NewsImagesCollection: UITableViewCell {
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        imageCacheService = PhotoCacheService(container: collectionView)
-        
         numberOfItems = CGFloat(photoURLs.count)
         configureLayout()
      
+        imageCacheService = PhotoCacheService(container: collectionView)
         collectionView.registerWithNib(registerClass: NewsImageCell.self)
     }
     
-    func configure(
+    internal func configure(
         currentNews: News?,
         indexPath: IndexPath
     ) {
@@ -48,23 +46,21 @@ class NewsImagesCollection: UITableViewCell {
         NewsImagesCollection.collectionHeight[indexPath] = collectionView.frame.size.height
     }
     
-    func collectionView(
+    internal func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
         photoURLs.count
     }
     
-    func collectionView(
+    internal func collectionView(
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        
         guard let cell = collectionView.dequeueReusableCell(
             withIdentifier: NewsImageCell.self,
             forIndexPath: indexPath)
         else { return UICollectionViewCell() }
-
         let image = imageCacheService?.photo(
             atIndexPath: indexPath,
             byUrl: photoURLs[indexPath.row])
@@ -74,8 +70,7 @@ class NewsImagesCollection: UITableViewCell {
     }
     
 
-    func configureLayout() {
-        
+    internal func configureLayout() {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         let width = UIScreen.main.bounds.width
         
@@ -84,7 +79,6 @@ class NewsImagesCollection: UITableViewCell {
         aspect31.isActive = false
         aspect32.isActive = false
         
-
         layout.sectionInset = UIEdgeInsets(
                                 top: 0,
                                 left: 0,

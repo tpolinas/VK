@@ -9,8 +9,7 @@ import UIKit
 import RealmSwift
 
 final class GroupsVC: UITableViewController {
-    
-    @IBOutlet var groupsSearch: UISearchBar!
+    @IBOutlet weak var groupsSearch: UISearchBar!
     
     private var groupsToken: NotificationToken?
     private var groupsFiltered = [GroupRealm]()
@@ -117,7 +116,7 @@ final class GroupsVC: UITableViewController {
         }
     }
     
-    func networkServiceFunction() {
+    private func networkServiceFunction() {
         networkService.fetch(type: .groups) { [weak self] result in
             switch result {
             case .success(let myGroups):
@@ -137,7 +136,7 @@ final class GroupsVC: UITableViewController {
         }
     }
     
-    func sortGroups() {
+    private func sortGroups() {
         guard let userGroups = userGroups else { return }
         self.groupsFiltered.removeAll()
         for group in userGroups {

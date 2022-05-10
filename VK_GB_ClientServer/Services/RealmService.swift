@@ -8,10 +8,9 @@
 import RealmSwift
 
 final class RealmService {
+    public static let deleteIfMigration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
     
-    static let deleteIfMigration = Realm.Configuration(deleteRealmIfMigrationNeeded: true)
-    
-    class func save<T: Object>(
+    public class func save<T: Object>(
         items: [T],
         configuration: Realm.Configuration = deleteIfMigration,
         update: Realm.UpdatePolicy = .modified) throws {
@@ -23,38 +22,38 @@ final class RealmService {
             }
         }
     
-    class func add<T: Object> (item: T) throws {
+    public class func add<T: Object> (item: T) throws {
         let realm = try Realm()
         try realm.write {
             realm.add(item)
         }
     }
     
-    class func load<T: Object> (typeOf: T.Type) throws -> Results<T> {
+    public class func load<T: Object> (typeOf: T.Type) throws -> Results<T> {
         let realm = try Realm()
         return realm.objects(T.self)
     }
     
-    class func load<T: Object>(typeOf: T.Type) throws -> [T] {
+    public class func load<T: Object>(typeOf: T.Type) throws -> [T] {
         let realm = try Realm()
         return realm.objects(T.self).map { $0 }
     }
     
-    class func delete<T: Object>(object: T) throws {
+    public class func delete<T: Object>(object: T) throws {
         let realm = try Realm()
         try realm.write {
             realm.delete(object)
         }
     }
     
-    class func delete<T: Object>(object: Results<T>) throws {
+    public class func delete<T: Object>(object: Results<T>) throws {
         let realm = try Realm()
         try realm.write {
             realm.delete(object)
         }
     }
 
-    class func clear() throws {
+    public class func clear() throws {
         let realm = try Realm()
         try realm.write {
             realm.deleteAll()

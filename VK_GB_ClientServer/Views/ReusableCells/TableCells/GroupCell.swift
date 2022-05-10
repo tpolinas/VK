@@ -9,13 +9,13 @@ import UIKit
 import Kingfisher
 
 class GroupCell: UITableViewCell {
-    @IBOutlet var groupAvatar: UIImageView!
-    @IBOutlet var groupName: UILabel!
+    @IBOutlet weak var groupAvatar: UIImageView!
+    @IBOutlet weak var groupName: UILabel!
     @IBAction func avatarPressed() {
         AvatarImage.animateAvatar(groupAvatar)
     }
     
-    func configure(
+    public func configure(
         name: String,
         url: String
     ) {

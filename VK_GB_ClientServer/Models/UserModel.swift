@@ -8,17 +8,17 @@
 import Foundation
 
 struct User {
-    let id: Int
-    let firstName: String
-    let lastName: String
-    let photo: String
-    let largePhoto: String
-    let sex: Int
-    var fullName: String { lastName + " " + firstName }
+    public let id: Int
+    public let firstName: String
+    public let lastName: String
+    public let photo: String
+    public let largePhoto: String
+    public let sex: Int
+    public var fullName: String { lastName + " " + firstName }
 }
 
 extension User: Codable {
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case id
         case firstName = "first_name"
         case lastName = "last_name"
@@ -29,7 +29,7 @@ extension User: Codable {
 }
 
 extension User: Comparable {
-    static func < (lhs: User, rhs: User) -> Bool {
+    public static func < (lhs: User, rhs: User) -> Bool {
         lhs.lastName < rhs.lastName
     }
 }

@@ -10,18 +10,16 @@ import RealmSwift
 import Kingfisher
 
 class PhotosFriend: UIViewController {
+    @IBOutlet weak var photo: UIImageView!
     
-    @IBOutlet var photo: UIImageView!
-    
-    var friend: UserRealm?
-    var photos: Results<PhotoRealm>? = try? RealmService.load(
+    public var friend: UserRealm?
+    public var photos: Results<PhotoRealm>? = try? RealmService.load(
         typeOf: PhotoRealm.self)
-    var chosenPhotoIndex = Int()
+    public var chosenPhotoIndex = Int()
     private var photoSubview = UIImageView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setup()
     }
     
@@ -33,12 +31,12 @@ class PhotosFriend: UIViewController {
         }
     }
     
-    func gestureRecognizer(
+    internal func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
         shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool { true }
     
-    @objc func swipePhoto(_ gesture: UIGestureRecognizer) {
+    @objc private func swipePhoto(_ gesture: UIGestureRecognizer) {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             switch swipeGesture.direction {
             case .left:
@@ -55,7 +53,7 @@ class PhotosFriend: UIViewController {
         }
     }
     
-    func animateFlip() {
+    private func animateFlip() {
         view.layoutIfNeeded()
         
         UIView.animateKeyframes(
@@ -81,9 +79,7 @@ class PhotosFriend: UIViewController {
                     relativeDuration: 0.5) {
                         self.photoSubview.center.x = self.photo.center.x
                     }
-                
             } completion: { isCompleted in
-                
                 self.photo.kf.setImage(
                     with: URL(string: self.photos![self.chosenPhotoIndex].url))
                 self.photo.alpha = 1
@@ -91,8 +87,9 @@ class PhotosFriend: UIViewController {
             }
     }
     
-    func setupSubview(on side: UISwipeGestureRecognizer.Direction) {
-        
+    private func setupSubview(
+        on side: UISwipeGestureRecognizer.Direction
+    ) {
         photoSubview.frame.size.width = view.bounds.width * 0.5
         photoSubview.frame.size.height = photoSubview.frame.size.width
         photoSubview.center.y = photo.center.y
@@ -106,7 +103,6 @@ class PhotosFriend: UIViewController {
            } else {
                chosenPhotoIndex = 0
            }
-            
         case .left:
         photoSubview.center.x = -photo.center.x * 2 - photoSubview.frame.size.width / 2
            if chosenPhotoIndex - 1 >= 0 {
@@ -114,7 +110,6 @@ class PhotosFriend: UIViewController {
            } else {
                chosenPhotoIndex = photos!.count - 1
            }
-            
         default:
             break
         }

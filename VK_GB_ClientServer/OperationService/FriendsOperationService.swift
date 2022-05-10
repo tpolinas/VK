@@ -10,11 +10,12 @@ import RealmSwift
 
 final class FriendsOperationService {
     static let instance = FriendsOperationService()
+    private var friends = [UserRealm]()
     private init() {}
     
-    var friends = [UserRealm]()
-    
-    func fetchFriends(completion: @escaping ([UserRealm]) -> Void) {
+    public func fetchFriends(
+        completion: @escaping ([UserRealm]) -> Void
+    ) {
         let dataQueue: OperationQueue = {
             let queue = OperationQueue()
             queue.qualityOfService = .utility

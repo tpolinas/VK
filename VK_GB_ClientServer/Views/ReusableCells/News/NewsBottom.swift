@@ -8,14 +8,9 @@
 import UIKit
 
 class NewsBottom: UITableViewCell {
-
-    @IBOutlet var likeButton: UIButton!
-    @IBOutlet var commentsButton: UIButton!
-    @IBOutlet var shareButton: UIButton!
-   
-    
-    @IBAction func buttonPressed(_ sender: UIButton) { }
-    
+    @IBOutlet weak var likeButton: UIButton!
+    @IBOutlet weak var commentsButton: UIButton!
+    @IBOutlet weak var shareButton: UIButton!
     
     func configure(
         isLiked: Bool,
@@ -47,6 +42,5 @@ class NewsBottom: UITableViewCell {
         shareButton.setTitle(
             "\(sharedCounter)",
             for: .normal)
-
     }
 }

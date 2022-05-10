@@ -9,13 +9,13 @@ import UIKit
 import Kingfisher
 
 class FriendCell: UITableViewCell {
-    @IBOutlet var friendAvatar: UIImageView!
-    @IBOutlet var friendName: UILabel!
+    @IBOutlet weak var friendAvatar: UIImageView!
+    @IBOutlet weak var friendName: UILabel!
     @IBAction func avatarPressed() {
         AvatarImage.animateAvatar(friendAvatar)
     }
     
-    func configure(
+    public func configure(
         name: String,
         url: String
     ) {

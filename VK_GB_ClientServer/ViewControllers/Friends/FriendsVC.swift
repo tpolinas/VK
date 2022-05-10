@@ -9,8 +9,7 @@ import UIKit
 import RealmSwift
 
 final class FriendsVC: UITableViewController {
-    
-    @IBOutlet var searchBar: UISearchBar!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     private var friendsDictionary = [String: [UserRealm]]()
     private var friendsSectionTitles = [String]()
@@ -34,9 +33,7 @@ final class FriendsVC: UITableViewController {
         
         searchBar.delegate = self
         tableView.sectionHeaderTopPadding = 0
-        
         tableView.registerWithNib(registerClass: FriendCell.self)
-        
         networkServiceFunction()
         friendsOperationService.fetchFriends { friend in
             self.friendsRealm = friend
@@ -60,13 +57,14 @@ final class FriendsVC: UITableViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
         friendsToken?.invalidate()
     }
 
 // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    override func numberOfSections(
+        in tableView: UITableView
+    ) -> Int {
         friendsSectionTitles.count
     }
     
@@ -77,7 +75,9 @@ final class FriendsVC: UITableViewController {
         friendsFilteredDictionary[friendsSectionTitles[section]]!.count
     }
     
-    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+    override func sectionIndexTitles(
+        for tableView: UITableView
+    ) -> [String]? {
         return friendsSectionTitles
     }
 
@@ -116,7 +116,7 @@ final class FriendsVC: UITableViewController {
         return cell
     }
     
-    func networkServiceFunction() {
+    private func networkServiceFunction() {
         networkService.fetch(type: .friends) { [weak self] result in
             switch result {
             case .success(let responseFriends):
@@ -134,7 +134,7 @@ final class FriendsVC: UITableViewController {
         }
     }
     
-    func sortFriends() {
+    private func sortFriends() {
         guard let friends = friends else { return }
             for friend in friends where friend.firstName != "DELETED" {
                 friendsDictionary.removeAll()
@@ -148,10 +148,8 @@ final class FriendsVC: UITableViewController {
                             friendsDictionary[letterKey] = [friends[index]]
                         }
                 }
-                
                 friendsSectionTitles = [String](friendsDictionary.keys).sorted(by: { $0 < $1 })
             }
-        
             self.friendsFilteredDictionary = self.friendsDictionary
             self.tableView.reloadData()
     }

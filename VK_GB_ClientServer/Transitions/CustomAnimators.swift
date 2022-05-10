@@ -8,23 +8,24 @@
 import UIKit
 
 final class PushAnimator: NSObject {
-    
     private let animateTime = 0.5
     
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        
+    internal func transitionDuration(
+        using transitionContext: UIViewControllerContextTransitioning?
+    ) -> TimeInterval {
         animateTime
     }
     
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        
+    internal func animateTransition(
+        using transitionContext: UIViewControllerContextTransitioning
+    ) {
         guard
             let source = transitionContext.viewController(forKey: .from),
-            let destination = transitionContext.viewController(forKey: .to)
+            let destination = transitionContext.viewController(
+                                                            forKey: .to)
         else { return }
         
         guard destination is PhotosFriend else {
-
         transitionContext.containerView.addSubview(destination.view)
         destination.view.frame = transitionContext.containerView.frame
         
@@ -37,7 +38,6 @@ final class PushAnimator: NSObject {
         source.view.layer.anchorPoint = CGPoint(x: 1.0, y: 0.0)
         source.view.layer.position = CGPoint(x: transitionContext.containerView.frame.width, y: 0)
 
-        
         UIView.animateKeyframes(
             withDuration: animateTime,
             delay: 0.0,
@@ -50,7 +50,6 @@ final class PushAnimator: NSObject {
                         let rotation = CGAffineTransform(rotationAngle: .pi / 2)
                         source.view.transform = rotation
                     })
-                
                 UIView.addKeyframe(
                     withRelativeStartTime: 0.0,
                     relativeDuration: 1.0){
@@ -69,25 +68,24 @@ final class PushAnimator: NSObject {
     }
 }
 
-
-
 final class PopAnimator: NSObject {
-    
     private let animateTime = 0.5
     
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        
+    internal func transitionDuration(
+        using transitionContext: UIViewControllerContextTransitioning?
+    ) -> TimeInterval {
         animateTime
     }
     
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        
+    internal func animateTransition(
+        using transitionContext: UIViewControllerContextTransitioning
+    ) {
         guard
             let source = transitionContext.viewController(forKey: .from),
-            let destination = transitionContext.viewController(forKey: .to)
+            let destination = transitionContext.viewController(
+                                                            forKey: .to)
         else { return }
 
-        
         transitionContext.containerView.addSubview(destination.view)
         destination.view.frame = transitionContext.containerView.frame
         
@@ -99,7 +97,6 @@ final class PopAnimator: NSObject {
         
         source.view.layer.anchorPoint = CGPoint(x: 1.0, y: 0.0)
         source.view.layer.position = CGPoint(x: transitionContext.containerView.frame.width, y: 0)
-        
         
         UIView.animateKeyframes(
             withDuration: animateTime,
@@ -113,7 +110,6 @@ final class PopAnimator: NSObject {
                         let rotation = CGAffineTransform(rotationAngle: -.pi / 2)
                         source.view.transform = rotation
                     })
-                
                 UIView.addKeyframe(
                     withRelativeStartTime: 0.0,
                     relativeDuration: 1.0){
@@ -133,17 +129,19 @@ final class PopAnimator: NSObject {
 }
 
 final class PopPhoto: NSObject {
-
     private let animateTime = 0.0
 
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        
+    internal func transitionDuration(
+        using transitionContext: UIViewControllerContextTransitioning?
+    ) -> TimeInterval {
         animateTime
     }
 
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        
-        guard let destination = transitionContext.viewController(forKey: .to)
+    internal func animateTransition(
+        using transitionContext: UIViewControllerContextTransitioning
+    ) {
+        guard let destination = transitionContext.viewController(
+                                                            forKey: .to)
         else { return }
 
         transitionContext.containerView.addSubview(destination.view)
@@ -151,22 +149,21 @@ final class PopPhoto: NSObject {
         
         destination.view.transform = .identity
         transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-
     }
 }
 
 final class PushPhoto: NSObject {
-    
     private let animateTime = 1.0
     
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        
+    internal func transitionDuration(
+        using transitionContext: UIViewControllerContextTransitioning?
+    ) -> TimeInterval {
         animateTime
     }
     
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-
-    }
+    internal func animateTransition(
+        using transitionContext: UIViewControllerContextTransitioning
+    ) { }
 }
 
 extension PushAnimator: UIViewControllerAnimatedTransitioning { }

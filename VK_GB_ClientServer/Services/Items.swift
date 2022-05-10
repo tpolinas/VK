@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Items<ItemsType: Decodable>: Decodable {
+public struct Items<ItemsType: Decodable>: Decodable {
     let items: [ItemsType]
     let count: Int?
 }

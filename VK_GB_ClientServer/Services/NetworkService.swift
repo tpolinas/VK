@@ -8,8 +8,7 @@
 import Foundation
 
 final class NetworkService<ItemsType: Decodable>  {
-    
-    enum requestType {
+    public enum requestType {
         case friends
         case groups
         case groupSearch
@@ -17,9 +16,9 @@ final class NetworkService<ItemsType: Decodable>  {
         case feed
     }
     
-    lazy var userSession = URLSession.shared
-    let scheme = "https"
-    let host = "api.vk.com"
+    private lazy var userSession = URLSession.shared
+    private let scheme = "https"
+    private let host = "api.vk.com"
     
     private var urlConstructor: URLComponents = {
         var constructor = URLComponents()
@@ -28,7 +27,7 @@ final class NetworkService<ItemsType: Decodable>  {
         return constructor
     }()
     
-    func fetch(
+    public func fetch(
         type: requestType,
         q: String? = "",
         id: Int? = 0,
@@ -57,7 +56,6 @@ final class NetworkService<ItemsType: Decodable>  {
                     name: "v",
                     value: "5.131"),
             ]
-            
         case .groups:
             constructor.path = "/method/groups.get"
             
@@ -75,7 +73,6 @@ final class NetworkService<ItemsType: Decodable>  {
                     name: "v",
                     value: "5.131"),
             ]
-            
         case .groupSearch:
             constructor.path = "/method/groups.search"
             
@@ -96,7 +93,6 @@ final class NetworkService<ItemsType: Decodable>  {
                     name: "v",
                     value: "5.131"),
             ]
-            
         case .photos:
             constructor.path = "/method/photos.get"
             
@@ -123,7 +119,6 @@ final class NetworkService<ItemsType: Decodable>  {
                     name: "v",
                     value: "5.131"),
             ]
-            
         case .feed:
             constructor.path = "/method/newsfeed.get"
             
@@ -150,7 +145,6 @@ final class NetworkService<ItemsType: Decodable>  {
         }
 
         guard let url = constructor.url else { return }
-        
         let task = userSession.dataTask(with: url) { data, response, error in
             guard
                 error == nil,
@@ -160,7 +154,6 @@ final class NetworkService<ItemsType: Decodable>  {
                 let json = try JSONDecoder().decode(
                     Response<ItemsType>.self,
                     from: data)
-                
                 completion(.success(json.response.items))
             } catch {
                 print(error)

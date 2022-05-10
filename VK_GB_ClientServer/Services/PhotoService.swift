@@ -9,7 +9,6 @@ import UIKit
 import Alamofire
 
 class PhotoService {
-    
     private var images = [String: UIImage]()
     private let container: DataReloadable
     
@@ -21,9 +20,7 @@ class PhotoService {
     }
     
     private static let pathName: String = {
-        
         let pathName = "images"
-        
         guard let cachesDirectory = FileManager.default.urls(
             for: .cachesDirectory,
             in: .userDomainMask)
@@ -32,7 +29,6 @@ class PhotoService {
         let url = cachesDirectory.appendingPathComponent(
                                         pathName,
                                         isDirectory: true)
-        
         if !FileManager.default.fileExists(atPath: url.path) {
             try? FileManager.default.createDirectory(
                 at: url,
@@ -42,7 +38,7 @@ class PhotoService {
         return pathName
     }()
     
-    func photo(
+    private func photo(
         atIndexPath indexPath: IndexPath,
         byUrl url: String
     ) -> UIImage? {
@@ -62,7 +58,6 @@ class PhotoService {
             let fileName = getFilePath(url: url),
             let image = UIImage(contentsOfFile: fileName)
         else { return nil }
-        
         DispatchQueue.main.async {
             self.images[url] = image
         }
@@ -75,7 +70,6 @@ class PhotoService {
             in: .userDomainMask)
                 .first
         else { return nil }
-        
         let hashName = url.split(separator: "/").last ?? "default"
         return cachesDirectory
             .appendingPathComponent(
@@ -94,7 +88,6 @@ class PhotoService {
                 let data = response.data,
                 let image = UIImage(data: data)
             else { return }
-            
             DispatchQueue.main.async {
                 self?.saveImageToCache(url: url, image: image)
                 self?.images[url] = image
@@ -123,7 +116,6 @@ fileprivate protocol DataReloadable {
 }
 
 extension PhotoService {
-    
     private class Table: DataReloadable {
         let table: UITableView
         

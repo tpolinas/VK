@@ -8,13 +8,13 @@
 import Foundation
 
 struct Group {
-    let id: Int
-    let name: String
-    let avatar: String
+    public let id: Int
+    public let name: String
+    public let avatar: String
 }
 
 extension Group: Codable {
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case id
         case name
         case avatar = "photo_100"
@@ -22,7 +22,7 @@ extension Group: Codable {
 }
 
 extension Group: Equatable {
-    static func == (lhs: Group, rhs: Group) -> Bool {
+    public static func == (lhs: Group, rhs: Group) -> Bool {
         return lhs.name == rhs.name
     }
 }

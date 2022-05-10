@@ -9,8 +9,8 @@ import Foundation
 import RealmSwift
 
 class NetworkServiceOperation: AsyncOperation {
-    var networkService = NetworkService<User>()
-    var data: [User]?
+    private var networkService = NetworkService<User>()
+    public var data: [User]?
     
     override func main() {
         DispatchQueue.global().async {

@@ -9,13 +9,13 @@ import UIKit
 import RealmSwift
 
 final class NewsService {
-    static let instance = NewsService()
+    public static let instance = NewsService()
     private init() {}
     
-    let networkService = NetworkService<News>()
-    var userNews = [News]()
+    private let networkService = NetworkService<News>()
+    public var userNews = [News]()
     
-    func getNews(
+    public func getNews(
         nextFrom: String? = "",
         completion: @escaping () -> Void
     ) {
@@ -26,7 +26,7 @@ final class NewsService {
         }
     }
     
-    func networkServiceFunction(
+    private func networkServiceFunction(
         nextFrom: String? = "",
         completion: @escaping ([News]) -> Void
     ) {

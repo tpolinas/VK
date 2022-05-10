@@ -8,14 +8,14 @@
 import Foundation
 
 class AsyncOperation: Operation {
-    enum state: String {
+    public enum state: String {
         case ready, executing, finished
         var keyPath: String {
             return "is" + rawValue.capitalized
         }
     }
     
-    var state = state.ready {
+    public var state = state.ready {
         willSet {
             willChangeValue(forKey: self.state.keyPath)
             willChangeValue(forKey: newValue.keyPath)

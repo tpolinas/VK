@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Date {
+public extension Date {
     enum DateFormat: String {
         case dateTime = "dd.MM.yy, HH:mm"
         case date = "dd.MM.yy"

@@ -9,17 +9,15 @@ import UIKit
 
 final class CustomNavigationController:
     UIPercentDrivenInteractiveTransition {
-    var isStarted = false
-    var shouldFinish = false
+    fileprivate var isStarted = false
+    fileprivate var shouldFinish = false
 }
 
 final class CustomNavController: UINavigationController {
-    
-    let pushAnimation = PushAnimator()
-    let popAnimation = PopAnimator()
-    let pushPhoto = PushPhoto()
-    let popPhoto = PopPhoto()
-    
+    private let pushAnimation = PushAnimator()
+    private let popAnimation = PopAnimator()
+    private let pushPhoto = PushPhoto()
+    private let popPhoto = PopPhoto()
     private let interactiveTransition = CustomNavigationController()
     
     override func viewDidLoad() {
@@ -34,7 +32,7 @@ final class CustomNavController: UINavigationController {
 
     }
     
-    @objc func edgePan(_ recognizer: UIScreenEdgePanGestureRecognizer) {
+    @objc private func edgePan(_ recognizer: UIScreenEdgePanGestureRecognizer) {
         switch recognizer.state {
         case .began:
             interactiveTransition.isStarted = true
@@ -47,7 +45,6 @@ final class CustomNavController: UINavigationController {
                 interactiveTransition.cancel()
                 return
             }
-    
             let translation = recognizer.translation(in: view)
             let relationTranslation = translation.x / width
             let progress = max(0, min(relationTranslation, 1))
@@ -66,17 +63,15 @@ final class CustomNavController: UINavigationController {
         }
     }
     
-    func navigationController(
+    internal func navigationController(
         _ navigationController: UINavigationController,
         animationControllerFor operation: UINavigationController.Operation,
         from fromVC: UIViewController,
         to toVC: UIViewController
     ) -> UIViewControllerAnimatedTransitioning? {
-            
             if fromVC is PhotosFriend {
                 return popPhoto
             }
-            
             if toVC is PhotosFriend {
                     return nil
                 } else {
@@ -91,7 +86,7 @@ final class CustomNavController: UINavigationController {
             }
         }
     
-    func navigationController(
+    internal func navigationController(
         _ navigationController: UINavigationController,
         interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
             return interactiveTransition.isStarted

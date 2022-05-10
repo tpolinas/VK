@@ -9,15 +9,14 @@ import UIKit
 import Kingfisher
 
 class ProfileHeader: UICollectionReusableView {
-
-    @IBOutlet var friendName: UILabel!
-    @IBOutlet var friendAvatar: UIImageView!
-    @IBOutlet var friendGender: UILabel!
+    @IBOutlet weak var friendName: UILabel!
+    @IBOutlet weak var friendAvatar: UIImageView!
+    @IBOutlet weak var friendGender: UILabel!
     @IBAction func avatarPressed() {
         AvatarImage.animateAvatar(friendAvatar)
     }
 
-    func configure(
+    public func configure(
         friendName: String,
         url: String,
         friendGender: String

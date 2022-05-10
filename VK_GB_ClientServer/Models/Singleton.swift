@@ -9,10 +9,10 @@ import Foundation
 
 final class Singleton {
     
-    var token: String = ""
-    var userID: Int = 0
+    public var token: String = ""
+    public var userID: Int = 0
     
-    static let instance = Singleton()
+    public static let instance = Singleton()
     
     private init() { }
 }

@@ -7,11 +7,11 @@
 
 import UIKit
 
-protocol ReusableView: AnyObject {
+public protocol ReusableView: AnyObject {
     static var defaultReuseIdentifier: String { get }
 }
 
-extension UITableView {
+public extension UITableView {
     func registerWithNib<T: UITableViewCell>(registerClass: T.Type) {
         let defaultReuseIdentifier = registerClass.defaultReuseIdentifier
         let nib = UINib(
@@ -53,7 +53,7 @@ extension UITableView {
     }
 }
 
-extension UICollectionView {
+public extension UICollectionView {
     func registerWithNib<T: UICollectionViewCell>(registerClass: T.Type) {
         let defaultReuseIdentifier = registerClass.defaultReuseIdentifier
         let nib = UINib(
@@ -65,7 +65,7 @@ extension UICollectionView {
     }
 }
 
-extension UICollectionView {
+public extension UICollectionView {
     func registerWithNibSectionHeader<T: UICollectionReusableView>(registerClass: T.Type) {
         let defaultReuseIdentifier = registerClass.defaultReuseIdentifier
         let nib = UINib(
@@ -107,31 +107,31 @@ extension UICollectionView {
 }
 
 extension UITableViewCell: ReusableView {
-    static var defaultReuseIdentifier: String {
+    public static var defaultReuseIdentifier: String {
         return String(describing: self)
     }
 }
 
 extension UITableView: ReusableView {
-    static var defaultReuseIdentifier: String {
+    public static var defaultReuseIdentifier: String {
         return String(describing: self)
     }
 }
 
 extension UICollectionView: ReusableView {
-    static var defaultReuseIdentifier: String {
+    public static var defaultReuseIdentifier: String {
         return String(describing: self)
     }
 }
 
 extension UICollectionViewController: ReusableView {
-    static var defaultReuseIdentifier: String {
+    public static var defaultReuseIdentifier: String {
         return String(describing: self)
     }
 }
 
 extension UICollectionReusableView: ReusableView {
-    static var defaultReuseIdentifier: String {
+    public static var defaultReuseIdentifier: String {
         return String(describing: self)
     }
 }

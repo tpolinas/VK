@@ -8,71 +8,73 @@
 import UIKit
 
 class GradientView: UIView {
-    
-    @IBInspectable var startColor: UIColor = .white {
+    @IBInspectable private var startColor: UIColor = .white {
         didSet {
             self.updateColors()
         }
     }
     
-    @IBInspectable var endColor: UIColor = .black {
+    @IBInspectable private var endColor: UIColor = .black {
         didSet {
             self.updateColors()
         }
     }
     
-    @IBInspectable var startLocation: CGFloat = 0 {
+    @IBInspectable private var startLocation: CGFloat = 0 {
         didSet {
             self.updateLocations()
         }
     }
     
-    @IBInspectable var endLocation: CGFloat = 1 {
+    @IBInspectable private var endLocation: CGFloat = 1 {
         didSet {
             self.updateLocations()
         }
 
     }
        
-   @IBInspectable var startPoint: CGPoint = .zero {
+   @IBInspectable private var startPoint: CGPoint = .zero {
        didSet {
            self.updateStartPoint()
        }
    }
     
-   @IBInspectable var endPoint: CGPoint = CGPoint(x: 0, y: 1) {
+   @IBInspectable private var endPoint: CGPoint = CGPoint(
+                                                            x: 0,
+                                                            y: 1
+   ) {
        didSet {
            self.updateEndPoint()
        }
    }
    
-   override static var layerClass: AnyClass {
+    override internal static var layerClass: AnyClass {
        return CAGradientLayer.self
    }
    
-   var gradientLayer: CAGradientLayer {
+   private var gradientLayer: CAGradientLayer {
        return self.layer as! CAGradientLayer
    }
 
-   func updateLocations() {
+   private func updateLocations() {
        self.gradientLayer.locations = [
         self.startLocation as NSNumber,
         self.endLocation as NSNumber
        ]
    }
    
-   func updateColors() {
+   private func updateColors() {
        self.gradientLayer.colors = [
         self.startColor.cgColor,
         self.endColor.cgColor
        ]
    }
 
-   func updateStartPoint() {
+   private func updateStartPoint() {
        self.gradientLayer.startPoint = startPoint
    }
 
-   func updateEndPoint() {
+   private func updateEndPoint() {
        self.gradientLayer.endPoint = endPoint
    }
 }

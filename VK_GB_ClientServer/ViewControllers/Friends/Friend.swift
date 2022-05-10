@@ -9,10 +9,8 @@ import UIKit
 import RealmSwift
 
 final class Friend: UICollectionViewController {
-    
-    var friend: UserRealm?
+    public var friend: UserRealm?
     static var mutableIndex = Int()
-    
     private var viewForSmooth = UIView()
     private var currentIndex = Int()
     private var chosenPhoto = Profile()
@@ -43,19 +41,19 @@ final class Friend: UICollectionViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         setup()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
         photosToken?.invalidate()
     }
 
     // MARK: UICollectionViewDataSource
 
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+    override func numberOfSections(
+        in collectionView: UICollectionView
+    ) -> Int {
         numberOfSectionsInCollectionView
     }
 
@@ -101,7 +99,7 @@ final class Friend: UICollectionViewController {
         return cell
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         let width = UIScreen.main.bounds.width
 
@@ -136,7 +134,7 @@ final class Friend: UICollectionViewController {
         }
     }
     
-    func primaryAnimation(
+    private func primaryAnimation(
         _ chosenIndex: IndexPath,
         _ vc: PhotosFriend
     ) {
@@ -162,7 +160,6 @@ final class Friend: UICollectionViewController {
                 .calculationModePaced
             ],
             animations: {
-
                 UIView.addKeyframe(
                     withRelativeStartTime: 0.0,
                     relativeDuration: 1.0,
@@ -173,7 +170,6 @@ final class Friend: UICollectionViewController {
                         self.viewForSmooth.backgroundColor = UIColor.white.withAlphaComponent(1.0)
                         self.viewForSmooth.alpha = 1.0
                     })
-                
                 UIView.addKeyframe(
                     withRelativeStartTime: 0.0,
                     relativeDuration: 1.0,
@@ -190,7 +186,7 @@ final class Friend: UICollectionViewController {
             })
     }
     
-    func finalAnimation(_ chosenIndex: IndexPath) {
+    private func finalAnimation(_ chosenIndex: IndexPath) {
         chosenPhoto = collectionView.cellForItem(at: chosenIndex) as! Profile
         
         let x = chosenPhoto.frame.midX
@@ -204,7 +200,6 @@ final class Friend: UICollectionViewController {
                 .calculationModePaced
             ],
             animations: {
-
                 UIView.addKeyframe(
                     withRelativeStartTime: 0.0,
                     relativeDuration: 1.0,
@@ -215,7 +210,6 @@ final class Friend: UICollectionViewController {
                         self.viewForSmooth.backgroundColor = UIColor.white.withAlphaComponent(0.0)
                         self.viewForSmooth.alpha = 0.0
                     })
-                
                 UIView.addKeyframe(
                     withRelativeStartTime: 0.0,
                     relativeDuration: 1.0,
@@ -232,7 +226,7 @@ final class Friend: UICollectionViewController {
             })
     }
     
-    func networkServiceFunction() {
+    private func networkServiceFunction() {
         networkService.fetch(
                         type: .photos,
                         id: friend!.id) { [weak self] result in
@@ -257,15 +251,12 @@ final class Friend: UICollectionViewController {
     private func setupView() {
         collectionView.delegate = self
         collectionView.dataSource = self
-        
         viewForSmooth.alpha = 0.0
-        
         friendsOperationService.fetchFriends { friend in
             self.friendsRealm = friend
         }
 
         collectionView.registerWithNib(registerClass: Profile.self)
-        
         collectionView.registerWithNibSectionHeader(registerClass: ProfileHeader.self)
     }
     
@@ -294,7 +285,6 @@ final class Friend: UICollectionViewController {
                 self.collectionView.deleteItems(at: delRowsIndex)
                 self.collectionView.insertItems(at: insertRowsIndex)
                 self.collectionView.reloadItems(at: modificationIndex)
-                
             case .error(let error):
                 print(error)
             }
@@ -303,7 +293,7 @@ final class Friend: UICollectionViewController {
 }
 
 extension Friend {
-    var numberOfSectionsInCollectionView: Int {
+    private var numberOfSectionsInCollectionView: Int {
         return 1
     }
 }

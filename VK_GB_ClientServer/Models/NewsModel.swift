@@ -8,17 +8,17 @@
 import Foundation
 
 struct News {
-    let sourceID: Int
-    let date: Date
-    var text: String?
-    let photosURLs: [Attachment]?
-    let likes: Likes
-    let reposts: Reposts
-    let comments: Comments
+    public let sourceID: Int
+    public let date: Date
+    public var text: String?
+    public let photosURLs: [Attachment]?
+    public let likes: Likes
+    public let reposts: Reposts
+    public let comments: Comments
 }
 
 extension News: Decodable {
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case sourceID = "source_id"
         case date
         case text
@@ -30,13 +30,13 @@ extension News: Decodable {
 }
 
 extension News: Comparable {
-    static func < (lhs: News, rhs: News) -> Bool {
+    public static func < (lhs: News, rhs: News) -> Bool {
         lhs.date < rhs.date
     }
 }
 
 extension News: Equatable {
-    static func == (lhs: News, rhs: News) -> Bool {
+    public static func == (lhs: News, rhs: News) -> Bool {
         lhs.date == rhs.date &&
         lhs.sourceID == rhs.sourceID
     }
@@ -46,17 +46,17 @@ extension News: Equatable {
 // MARK: - Comments
 
 struct Comments: Codable {
-    let count: Int
+    public let count: Int
 
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case count
     }
 }
 
 struct Likes: Codable {
-    let count: Int
+    public let count: Int
 
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case count
     }
 }
@@ -64,9 +64,9 @@ struct Likes: Codable {
 // MARK: - Reposts
 
 struct Reposts: Codable {
-    let count: Int
+    public let count: Int
 
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case count
     }
 }

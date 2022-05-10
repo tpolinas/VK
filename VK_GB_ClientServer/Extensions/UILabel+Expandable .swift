@@ -7,17 +7,15 @@
 
 import UIKit
 
-protocol ExpandableLabelDelegate {
+public protocol ExpandableLabelDelegate {
     func didPressButton(at indexPath: IndexPath)
 }
 
-extension UILabel {
-
+public extension UILabel {
     var isTruncated: Bool {
         guard let labelText = text else {
             return false
         }
-
         let labelTextSize = (labelText as NSString)
             .boundingRect(
                 with: CGSize(

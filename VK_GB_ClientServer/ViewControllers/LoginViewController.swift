@@ -8,13 +8,9 @@
 import UIKit
 
 class LoginViewController: UIViewController {
-
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
-    
-    var subview = UIView()
-    
     @IBAction func loginButtonPressed(_ sender: Any) {
         performCirclesAnimation() {
             self.perform(
@@ -24,10 +20,10 @@ class LoginViewController: UIViewController {
         }
     }
     
+    private var subview = UIView()
+    
     override func viewDidLoad() {
-        
         super.viewDidLoad()
-        
         setup()
     }
     
@@ -57,7 +53,7 @@ class LoginViewController: UIViewController {
             object: nil)
     }
     
-    @objc func keyboardWasShown(notification: Notification) {
+    @objc private func keyboardWasShown(notification: Notification) {
         let info = notification.userInfo! as NSDictionary
         let kbSize = (info.value(
             forKey: UIResponder.keyboardFrameEndUserInfoKey) as! NSValue)
@@ -82,7 +78,9 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @objc func keyboardWillBeHidden(notification: Notification) {
+    @objc private func keyboardWillBeHidden(
+        notification: Notification
+    ) {
         let contentInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInsets
         UIView.animate(withDuration: 1) {
@@ -96,11 +94,11 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @objc func hideKeyboard() {
+    @objc private func hideKeyboard() {
         self.scrollView?.endEditing(true)
     }
     
-    @objc func login() {
+    @objc private func login() {
         if !checkUser() {
             presentAlert()
         } else {
@@ -148,7 +146,6 @@ class LoginViewController: UIViewController {
     private func performCirclesAnimation(
         _ completion: @escaping ()->()
     ) {
-        
         CATransaction.begin()
         let circle1 = drawCircle(
                     x: view.frame.width / 2 - 14,

@@ -8,19 +8,19 @@
 import Foundation
 
 struct Photos {
-    let sizes: [Photo]
-    let ownerID: Int
+    public let sizes: [Photo]
+    public let ownerID: Int
 }
 
 extension Photos: Codable {
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case sizes
         case ownerID = "owner_id"
     }
 }
 
 struct Photo {
-    let url: String
+    public let url: String
     
     init(url: String) {
         self.url = url
@@ -28,12 +28,12 @@ struct Photo {
 }
 
 extension Photo: Codable {
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case url
     }
 }
 
 struct Attachment: Decodable {
-    let type: String
-    let photo: Photos?
+    public let type: String
+    public let photo: Photos?
 }

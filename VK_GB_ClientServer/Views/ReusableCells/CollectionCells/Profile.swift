@@ -9,13 +9,11 @@ import UIKit
 import Kingfisher
 
 class Profile: UICollectionViewCell {
-
-    @IBOutlet var friendPhoto: UIImageView!
-    @IBOutlet var likeButton: UIButton!
+    @IBOutlet weak var friendPhoto: UIImageView!
+    @IBOutlet weak var likeButton: UIButton!
     @IBAction func likeButtonPressed(_ sender: UIButton) {
         
         let likeCount = 0
-        
         sender.isSelected  = !sender.isSelected
         
         if sender.isSelected {
@@ -35,7 +33,7 @@ class Profile: UICollectionViewCell {
         }
     }
 
-    func animateLike(
+    private func animateLike(
         _ sender: UIButton,
         _ imageName: String
     ) {
@@ -52,7 +50,7 @@ class Profile: UICollectionViewCell {
             }
     }
     
-    func configure(url: String) {
+    public func configure(url: String) {
         self.friendPhoto.isHidden = true
         self.friendPhoto.image = nil
         self.friendPhoto.kf.setImage(

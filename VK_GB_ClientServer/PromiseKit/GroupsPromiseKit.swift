@@ -10,24 +10,21 @@ import RealmSwift
 import PromiseKit
 
 final class GroupsPromiseKit {
-    
     static let instance = GroupsPromiseKit()
     private init() {}
     
-    enum AppError: Error {
+    private enum AppError: Error {
         case errorTask
         case failedToDecode
         case realmInOutFail
     }
     
-    lazy var urlSession = URLSession.shared
-    let scheme = "https"
-    let host = "api.vk.com"
+    private lazy var urlSession = URLSession.shared
+    private let scheme = "https"
+    private let host = "api.vk.com"
     
     private var urlConstructor: URLComponents = {
-        
         var constructor = URLComponents()
-        
         constructor.scheme = "https"
         constructor.host = "api.vk.com"
         constructor.path = "/method/groups.get"
@@ -49,7 +46,7 @@ final class GroupsPromiseKit {
         return constructor
     }()
     
-    func fetchGroups() -> Promise<Data> {
+    public func fetchGroups() -> Promise<Data> {
         return Promise { resolver in
             guard let url = urlConstructor.url else { return }
             var request = URLRequest(url: url)
@@ -67,7 +64,7 @@ final class GroupsPromiseKit {
         }
     }
     
-    func decodeGroups(data: Data) -> Promise<[Group]> {
+    public func decodeGroups(data: Data) -> Promise<[Group]> {
         return Promise { resolver in
             do {
                 let json = try JSONDecoder().decode(
@@ -81,7 +78,7 @@ final class GroupsPromiseKit {
         }
     }
 
-    func groupsRealmService(groups: [Group]) -> Promise<[GroupRealm]> {
+    public func groupsRealmService(groups: [Group]) -> Promise<[GroupRealm]> {
         return Promise { resolver in
             let items = groups.map { i in
                 GroupRealm(group: i)

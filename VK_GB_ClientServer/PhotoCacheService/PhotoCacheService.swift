@@ -9,7 +9,6 @@ import UIKit
 import Alamofire
 
 class PhotoCacheService {
-
     private var images = [String: UIImage]()
     private let cacheLifeTime: TimeInterval = 30 * 24 * 60 * 60
     private let container: DataReloadable
@@ -41,7 +40,7 @@ class PhotoCacheService {
         return pathName
     }()
 
-    func photo(
+    public func photo(
         atIndexPath indexPath: IndexPath,
         byUrl url: String
     ) -> UIImage? {
@@ -61,13 +60,10 @@ class PhotoCacheService {
               let info = try? FileManager.default.attributesOfItem(atPath: fileName),
               let modificationDate = info[FileAttributeKey.modificationDate] as? Date
         else { return nil }
-
         let lifeTime = Date().timeIntervalSince(modificationDate)
-
         guard lifeTime <= cacheLifeTime,
               let image = UIImage(contentsOfFile: fileName)
         else { return nil }
-
         DispatchQueue.global().async {
             self.images[url] = image
         }
@@ -93,13 +89,10 @@ class PhotoCacheService {
             guard let data = response.data,
                   let image = UIImage(data: data)
             else { return }
-            
             DispatchQueue.global().async {
                 self?.images[url] = image
             }
-
             self?.saveImageToCache(url: url, image: image)
-
             DispatchQueue.main.async {
                 self?.container.reloadRow(atIndexPath: indexPath)
             }

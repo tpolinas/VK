@@ -31,7 +31,7 @@ extension UserRealm {
 }
 
 extension UserRealm: Comparable {
-    static func < (lhs: UserRealm, rhs: UserRealm) -> Bool {
+    public static func < (lhs: UserRealm, rhs: UserRealm) -> Bool {
         lhs.lastName < rhs.lastName
     }
 }

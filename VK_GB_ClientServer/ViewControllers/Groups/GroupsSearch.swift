@@ -8,14 +8,13 @@
 import UIKit
 
 class GroupsSearch: UITableViewController {
-    
-    @IBOutlet var allGroupsSearch: UISearchBar!
+    @IBOutlet weak var allGroupsSearch: UISearchBar!
     
     private var timer = Timer()
     private let networkService = NetworkService<Group>()
     private var searchQuery = String()
     
-    var allGroupsFiltered = [Group]() {
+    public var allGroupsFiltered = [Group]() {
         didSet {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -25,7 +24,6 @@ class GroupsSearch: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         tableView.registerWithNib(registerClass: GroupCell.self)
     }
 
@@ -87,7 +85,6 @@ extension GroupsSearch: UISearchBarDelegate {
         networkService.fetch(
                         type: .groupSearch,
                         q: searchQuery) { [weak self] result in
-            
                 switch result {
                 case .success(let allGroups):
                     allGroups.forEach() { item in

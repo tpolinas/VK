@@ -8,12 +8,11 @@
 import UIKit
 
 class NewsTextCell: UITableViewCell {
-
-    @IBOutlet var newsText: UILabel!
+    @IBOutlet weak var newsText: UILabel!
     
-    var indexPath = IndexPath()
-    var delegate: ExpandableLabelDelegate?
-    var textIsTruncated = Bool()
+    private var indexPath = IndexPath()
+    private var textIsTruncated = Bool()
+    public var delegate: ExpandableLabelDelegate?
     
     override func setSelected(
         _ selected: Bool,
@@ -26,11 +25,11 @@ class NewsTextCell: UITableViewCell {
        newsText.addGestureRecognizer(tapGesture)
     }
 
-   @objc func buttonTouched() {
+   @objc private func buttonTouched() {
        delegate?.didPressButton(at: indexPath)
    }
 
-    func configure(
+    public func configure(
         text: String,
         indexPath: IndexPath,
         textIsTruncated: Bool
