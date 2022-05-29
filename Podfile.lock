@@ -1,0 +1,40 @@
+PODS:
+  - Alamofire (5.6.1)
+  - DynamicJSON (2.0.2)
+  - Kingfisher (7.2.1)
+  - PromiseKit (6.17.0):
+    - PromiseKit/CorePromise (= 6.17.0)
+    - PromiseKit/Foundation (= 6.17.0)
+    - PromiseKit/UIKit (= 6.17.0)
+  - PromiseKit/CorePromise (6.17.0)
+  - PromiseKit/Foundation (6.17.0):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (6.17.0):
+    - PromiseKit/CorePromise
+  - SwiftyJSON (5.0.1)
+
+DEPENDENCIES:
+  - Alamofire
+  - DynamicJSON
+  - Kingfisher
+  - PromiseKit
+  - SwiftyJSON
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - DynamicJSON
+    - Kingfisher
+    - PromiseKit
+    - SwiftyJSON
+
+SPEC CHECKSUMS:
+  Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
+  DynamicJSON: fc0c5a82980ff8aa956156f04d84fcdb2822e875
+  Kingfisher: 7c084bebf7d548c623ad41bcf765fb200efed369
+  PromiseKit: 996202d4cae72b7801b312abef4cd2f995b2978a
+  SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
+
+PODFILE CHECKSUM: f06d13c5ebcac56efa2ca123ec11b90a1a51bfe1
+
+COCOAPODS: 1.11.2

@@ -1,0 +1,195 @@
+//
+//  NewsVC.swift
+//  VK_GB_ClientServer
+//
+//  Created by Polina Tikhomirova on 30.03.2022.
+//
+
+import UIKit
+import RealmSwift
+
+class NewsVC: UITableViewController {
+    internal enum Identifier: Int {
+        case top
+        case text
+        case image
+        case bottom
+    }
+    
+    private let networkService = NetworkService<News>()
+    internal var userNews = [News]() {
+            didSet {
+            for index in userNews.indices {
+                let indexPath: IndexPath = [index, 1]
+                textCellState[indexPath] = true
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+
+    static var nextFrom: String?
+    private let newsService = NewsService.instance
+    private var isLoading = false
+    internal var textCellState = [IndexPath : Bool]()
+    internal var indexOfCell: Identifier?
+    private var anotherQueue: DispatchQueue = DispatchQueue.init(
+                                                label: "anotherQueue")
+    private var oneMoreQueue: DispatchQueue = DispatchQueue.init(
+                                                label: "oneMoreQueue")
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.prefetchDataSource = self
+        
+        anotherQueue.sync {
+            self.tableView.rowHeight = UITableView.automaticDimension
+            self.tableView.estimatedRowHeight = UITableView.automaticDimension
+        }
+        
+        setup()
+        setupRefreshControl()
+        
+        self.oneMoreQueue.sync {
+            networkService.fetch(type: .feed) { [weak self] result in
+                switch result {
+                case .success(let myNews):
+                    myNews.forEach() { index in
+                        guard let attachment = index.photosURLs else { return }
+                        attachment.forEach { item in
+                            guard item.type == "photo" else { return }
+                            let new = News(
+                                sourceID: index.sourceID,
+                                date: index.date,
+                                text: index.text ?? "",
+                                photosURLs: attachment,
+                                likes: index.likes,
+                                reposts: index.reposts,
+                                comments: index.comments)
+                            guard !self!.userNews.contains(new) else { return }
+                        self?.userNews.append(new)
+                        }
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+    }
+
+    // MARK: - Table view data source
+
+    override func numberOfSections(
+        in tableView: UITableView
+    ) -> Int {
+        return userNews.count
+    }
+
+    internal let newsCellCount: Int = 4
+    
+    override func tableView(
+        _ tableView: UITableView,
+        numberOfRowsInSection section: Int
+    ) -> Int {
+        setupNumberOfRowsInSection(section: section)
+    }
+
+    override func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+        setupCell(indexPath: indexPath)
+    }
+    
+    public func loadGroupByID(_ id: Int) -> Group? {
+        do {
+            let realmGroups: [GroupRealm] = try RealmService.load(
+                typeOf: GroupRealm.self)
+            if let group = realmGroups.filter({ $0.id == -id }).first {
+                return Group(
+                        id: group.id,
+                        name: group.name,
+                        avatar: group.avatar)
+            } else {
+                return nil
+            }
+        } catch {
+            print(error)
+            return nil
+        }
+    }
+    
+    private func setupRefreshControl() {
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.tintColor = .cyan
+        tableView.refreshControl?.attributedTitle = NSAttributedString(string: "Updating...")
+        tableView.refreshControl?.addTarget(
+            self,
+            action: #selector(refreshNews),
+            for: .valueChanged)
+    }
+
+    @objc private func refreshNews() {
+        DispatchQueue.global(qos: .userInteractive).async {
+            self.newsService.getNews {
+                self.oneMoreQueue.sync {
+                    self.userNews = self.newsService.userNews
+                }
+            }
+        }
+        self.tableView.refreshControl?.endRefreshing()
+    }
+    
+    override func tableView(
+        _ tableView: UITableView,
+        heightForRowAt indexPath: IndexPath
+    ) -> CGFloat {
+        setupHeightForRowAt(indexPath: indexPath)
+    }
+    
+    private func setup() {
+        tableView.sectionHeaderTopPadding = 0
+        tableView.registerWithNib(registerClass: NewsTopCell.self)
+        tableView.registerWithNib(registerClass: NewsTextCell.self)
+        tableView.registerWithNib(registerClass: NewsImagesCollection.self)
+        tableView.registerWithNib(registerClass: NewsBottom.self)
+    }
+}
+
+extension NewsVC: UICollectionViewDelegate,
+                  UIGestureRecognizerDelegate { }
+
+extension NewsVC: ExpandableLabelDelegate {
+    func didPressButton(at indexPath: IndexPath) {
+        print(indexPath)
+        guard let state = textCellState[indexPath] else { return }
+        textCellState[indexPath] = !state
+        tableView.reloadRows(
+            at: [indexPath],
+            with: .none)
+    }
+}
+
+extension NewsVC: UITableViewDataSourcePrefetching {
+    func tableView(
+        _ tableView: UITableView,
+        prefetchRowsAt indexPaths: [IndexPath]
+    ) {
+        guard
+            let maxSection = indexPaths.map({ $0.section }).max()
+        else { return }
+        if maxSection > self.userNews.count - 5, !isLoading {
+            isLoading = true
+            DispatchQueue.global(qos: .background).async {
+                self.newsService.getNews(nextFrom: NewsVC.nextFrom) {
+                    self.userNews += self.newsService.userNews
+                    self.isLoading = false
+                }
+            }
+        }
+    }
+}
