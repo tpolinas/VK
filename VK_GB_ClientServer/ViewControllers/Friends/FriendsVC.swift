@@ -12,8 +12,8 @@ final class FriendsVC: UITableViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     
     private var friendsDictionary = [String: [UserRealm]]()
-    private var friendsSectionTitles = [String]()
-    private var friendsFilteredDictionary = [String: [UserRealm]]()
+    internal var friendsSectionTitles = [String]()
+    internal var friendsFilteredDictionary = [String: [UserRealm]]()
     private let networkService = NetworkService<User>()
     private let networkServiceOperation = NetworkServiceOperation()
     private let friendsOperationService = FriendsOperationService.instance
@@ -94,26 +94,14 @@ final class FriendsVC: UITableViewController {
         forSection section: Int
     ) {
         let header = view as? UITableViewHeaderFooterView
-        header?.tintColor = UIColor.gray.withAlphaComponent(0.05)
+        header?.tintColor = UIColor.brandGray
     }
     
     override func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: FriendCell.self,
-            forIndexPath: indexPath)
-        else { return UITableViewCell() }
-        let letterKey = friendsSectionTitles[indexPath.section]
-           if let friendsOnLetterKey = friendsFilteredDictionary[letterKey] {
-               let myFriend = friendsOnLetterKey[indexPath.row]
-
-               cell.configure(
-                   name: myFriend.fullName,
-                   url: myFriend.photo)
-           }
-        return cell
+        setupCell(indexPath: indexPath)
     }
     
     private func networkServiceFunction() {

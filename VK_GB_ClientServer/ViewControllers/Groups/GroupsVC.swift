@@ -12,7 +12,7 @@ final class GroupsVC: UITableViewController {
     @IBOutlet weak var groupsSearch: UISearchBar!
     
     private var groupsToken: NotificationToken?
-    private var groupsFiltered = [GroupRealm]()
+    internal var groupsFiltered = [GroupRealm]()
     private let networkService = NetworkService<Group>()
     private var userGroups: Results<GroupRealm>? = try? RealmService.load(
                 typeOf: GroupRealm.self)
@@ -91,18 +91,7 @@ final class GroupsVC: UITableViewController {
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: GroupCell.self,
-            forIndexPath: indexPath)
-        else { return UITableViewCell() }
-            
-        let myGroup = groupsFiltered[indexPath.row]
-
-        cell.configure(
-            name: myGroup.name,
-            url: myGroup.avatar)
-       
-        return cell
+        setupCell(indexPath: indexPath)
     }
     
     override func tableView(

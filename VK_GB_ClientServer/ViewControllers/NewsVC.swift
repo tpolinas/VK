@@ -9,7 +9,7 @@ import UIKit
 import RealmSwift
 
 class NewsVC: UITableViewController {
-    private enum Identifier: Int {
+    internal enum Identifier: Int {
         case top
         case text
         case image
@@ -17,7 +17,7 @@ class NewsVC: UITableViewController {
     }
     
     private let networkService = NetworkService<News>()
-    private var userNews = [News]() {
+    internal var userNews = [News]() {
             didSet {
             for index in userNews.indices {
                 let indexPath: IndexPath = [index, 1]
@@ -32,8 +32,8 @@ class NewsVC: UITableViewController {
     static var nextFrom: String?
     private let newsService = NewsService.instance
     private var isLoading = false
-    private var textCellState = [IndexPath : Bool]()
-    private var indexOfCell: Identifier?
+    internal var textCellState = [IndexPath : Bool]()
+    internal var indexOfCell: Identifier?
     private var anotherQueue: DispatchQueue = DispatchQueue.init(
                                                 label: "anotherQueue")
     private var oneMoreQueue: DispatchQueue = DispatchQueue.init(
@@ -89,109 +89,20 @@ class NewsVC: UITableViewController {
         return userNews.count
     }
 
-    private let newsCellCount: Int = 4
+    internal let newsCellCount: Int = 4
     
     override func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        var number = newsCellCount
-        if userNews[section].text == nil { number -= 1 }
-        if userNews[section].photosURLs == nil { number -= 1 }
-        return number
+        setupNumberOfRowsInSection(section: section)
     }
 
     override func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        let news = userNews[indexPath.section]
-        switch indexPath.row {
-        case 0:
-            indexOfCell = .top
-        case 1:
-            indexOfCell = (news.text == nil) ? .image : .text
-        case 2:
-            indexOfCell = (news.photosURLs == nil) || news.text == nil
-            ? .bottom : .image
-        case 3:
-            indexOfCell = .bottom
-        default:
-            indexOfCell = .none
-        }
-        
-        switch indexOfCell {
-        case .top:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: NewsTopCell.self,
-                forIndexPath: indexPath)
-            else { return UITableViewCell() }
-            let group = loadGroupByID(news.sourceID)
-            guard
-                group?.avatar != nil
-            else { return UITableViewCell() }
-            
-            cell.configure(
-                avatar: group!.avatar,
-                name: group!.name,
-                newsTime: news.date.toString(
-                                    dateFormat: .dateTime))
-            
-            return cell
-        case .text:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: NewsTextCell.self,
-                forIndexPath: indexPath)
-            else { return UITableViewCell() }
-            
-            guard
-                let textIsTruncated = textCellState[indexPath]
-            else { return cell }
-            
-            cell.configure(
-                text: news.text ?? "",
-                indexPath: indexPath,
-                textIsTruncated: textIsTruncated)
-            
-            cell.delegate = self
-            cell.selectionStyle = .none
-            
-            return cell
-        case .image:
-            var photos = [String]()
-            news.photosURLs?.forEach({ index in
-                guard let photoURL = index.photo?.sizes.last?.url else { return }
-                
-                photos.append(photoURL)
-            })
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: NewsImagesCollection.self,
-                forIndexPath: indexPath)
-            else { return UITableViewCell() }
-            
-            cell.currentNews = nil
-            cell.photoURLs = []
-            
-            cell.currentNews = news
-            cell.photoURLs = photos
-
-            return cell
-        case .bottom:
-            guard let cell = tableView.dequeueReusableCell(
-                withIdentifier: NewsBottom.self,
-                forIndexPath: indexPath)
-            else { return UITableViewCell() }
-
-            cell.configure(
-                isLiked: false,
-                likesCounter: news.likes.count,
-                commentsCounter: news.comments.count,
-                sharedCounter: news.reposts.count)
-
-            return cell
-        case .none:
-            return UITableViewCell()
-        }
+        setupCell(indexPath: indexPath)
     }
     
     public func loadGroupByID(_ id: Int) -> Group? {
@@ -237,21 +148,7 @@ class NewsVC: UITableViewController {
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
-        if indexPath.row == Identifier.text.rawValue {
-            if userNews[indexPath.section].text == "" {
-                return 0
-            }
-        }
-        if indexPath.row == Identifier.image.rawValue {
-            guard
-                let height = NewsImagesCollection.collectionHeight[indexPath]
-            else {
-                return UITableView.automaticDimension
-                
-            }
-            return height
-        }
-        return UITableView.automaticDimension
+        setupHeightForRowAt(indexPath: indexPath)
     }
     
     private func setup() {

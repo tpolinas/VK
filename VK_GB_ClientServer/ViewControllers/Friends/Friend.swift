@@ -167,7 +167,7 @@ final class Friend: UICollectionViewController {
                         self.enlargedPhoto.layer.position = CGPoint(
                             x: self.enlargedPhoto.layer.frame.width * scaling / 2,
                             y: self.view.frame.height / 2)
-                        self.viewForSmooth.backgroundColor = UIColor.white.withAlphaComponent(1.0)
+                        self.viewForSmooth.backgroundColor = UIColor.brandWhite
                         self.viewForSmooth.alpha = 1.0
                     })
                 UIView.addKeyframe(
